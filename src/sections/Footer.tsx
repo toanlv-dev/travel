@@ -14,9 +14,11 @@ export function Footer() {
         <div>
           <p className="text-h4 font-bold">{company.name}</p>
           <p className="mt-2 max-w-prose text-body text-white/70">{content.footer.about}</p>
-          <p className="mt-3 text-small text-white/50">
-            {content.about.licenseLabel}: {company.licenseNo}
-          </p>
+          {company.licenseNo && (
+            <p className="mt-3 text-small text-white/50">
+              {content.about.licenseLabel}: {company.licenseNo}
+            </p>
+          )}
         </div>
 
         <nav aria-label={content.footer.linksHeading}>
@@ -37,7 +39,7 @@ export function Footer() {
           <ul className="mt-1">
             <li>
               <a href={`tel:${company.hotline}`} className={linkClass}>
-                {company.hotlineDisplay}
+                {content.contact.hotlineDisplay}
               </a>
             </li>
             <li>
@@ -45,7 +47,7 @@ export function Footer() {
                 {company.email}
               </a>
             </li>
-            <li className="py-2 text-body text-white/70">{company.address}</li>
+            <li className="py-2 text-body text-white/70">{content.contact.address}</li>
           </ul>
 
           <h2 className="mt-4 text-h4">{content.footer.followHeading}</h2>

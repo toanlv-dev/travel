@@ -34,13 +34,15 @@ export function About() {
             </p>
           ))}
 
-          <p className="mt-6 inline-flex items-start gap-3 rounded-lg bg-soft p-4 text-small">
-            <BadgeCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary-600" />
-            <span className="text-ink">
-              {content.about.licenseLabel}
-              <span className="mt-0.5 block font-semibold">{company.licenseNo}</span>
-            </span>
-          </p>
+          {company.licenseNo && (
+            <p className="mt-6 inline-flex items-start gap-3 rounded-lg bg-soft p-4 text-small">
+              <BadgeCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary-600" />
+              <span className="text-ink">
+                {content.about.licenseLabel}
+                <span className="mt-0.5 block font-semibold">{company.licenseNo}</span>
+              </span>
+            </p>
+          )}
         </div>
       </div>
     </Section>

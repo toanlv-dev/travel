@@ -1,28 +1,28 @@
 /** Hằng số KHÔNG dịch: số điện thoại, link, đường dẫn ảnh.
  *  Chữ hiển thị nằm ở src/content/{en,vi}.ts. */
 
-// Thông tin mẫu — xem checklist ở README §7. Đổi siteUrl trước khi deploy.
+// Số giấy phép, Messenger, mạng xã hội và siteUrl VẪN LÀ MẪU — xem checklist ở README §7.
 export const company = {
-  name: 'Vietnam Travel Co.',
-  /** Số giấy phép lữ hành — hiển thị ở section About để tạo niềm tin */
-  licenseNo: '79-000/2013/TCDL-GPLHQT',
-  hotline: '0912345678',
-  hotlineDisplay: '091 234 5678',
-  email: 'hello@example.com',
-  zalo: 'https://zalo.me/0912345678',
-  messenger: 'https://m.me/example',
-  address: '123 Đường Placeholder, Quận 1, TP. Hồ Chí Minh',
-  /** Đổi thành domain thật trước khi deploy — dùng cho canonical + hreflang */
+  name: 'VIVA VIETNAM TRAVEL',
+  /** `null` = chưa có → About và Footer ẩn hẳn dòng giấy phép.
+   *  Đây là tuyên bố pháp lý, KHÔNG được để số bịa dưới tên công ty thật. */
+  licenseNo: null as string | null,
+  /** Dạng E.164 cho link tel: — cách viết cho người đọc nằm ở content.contact.hotlineDisplay */
+  hotline: '+84332146395',
+  email: 'vivavietnamtravel@gmail.com',
+  zalo: 'https://zalo.me/0332146395',
+  /** `null` = chưa có trang Facebook → mọi nút Messenger tự ẩn, không trỏ vào link chết */
+  messenger: null as string | null,
+  /** Chuỗi tra Google Maps, không phải chữ hiển thị — địa chỉ hiển thị nằm ở content.contact.address */
+  mapsQuery: '15 ngách 10/16/11 Kim Mã Thượng, Ngọc Hà, Ba Đình, Hà Nội',
+  /** ⚠️ MẪU — đổi thành domain thật trước khi deploy, dùng cho canonical + hreflang + sitemap */
   siteUrl: 'https://example.com',
 } as const;
 
 /** Bản đồ: chỉ link ra Google Maps, KHÔNG nhúng iframe.
  *  Iframe Maps nặng (~600KB + nhiều request bên thứ ba) mà địa chỉ hiện còn là placeholder. */
-export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address)}`;
+export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.mapsQuery)}`;
 
-/** Mạng xã hội — bỏ phần tử nào chưa có link thật thay vì để trỏ về '#'. */
-export const socials = [
-  { key: 'facebook', name: 'Facebook', url: 'https://facebook.com/example' },
-  { key: 'youtube', name: 'YouTube', url: 'https://youtube.com/@example' },
-  { key: 'zalo', name: 'Zalo', url: company.zalo },
-] as const;
+/** Mạng xã hội — chỉ liệt kê link THẬT. Có Facebook/YouTube thì thêm dòng vào đây:
+ *  { key: 'facebook', name: 'Facebook', url: 'https://facebook.com/...' } */
+export const socials = [{ key: 'zalo', name: 'Zalo', url: company.zalo }] as const;

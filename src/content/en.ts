@@ -4,9 +4,9 @@ import type { SiteContent } from './types.ts';
 export const content: SiteContent = {
   locale: 'en',
   seo: {
-    title: 'Vietnam Travel Co. — Guided tours across Vietnam since 2013',
+    title: 'VIVA Vietnam Travel — Guided tours across Vietnam, based in Hanoi',
     description:
-      'A licensed Vietnamese tour operator running guided trips from Sapa to Phu Quoc. 12 years, 8,500+ travellers, 4.9/5 average rating.',
+      'A licensed Vietnamese tour operator based in Hanoi, running guided trips across all three regions. Call +84 332 146 395 for free advice.',
     ogLocale: 'en_US',
   },
   nav: [
@@ -50,7 +50,7 @@ export const content: SiteContent = {
     overline: 'About us',
     heading: 'A local operator, not a booking website',
     body: [
-      'We are a Vietnamese tour operator based in Ho Chi Minh City. Every itinerary we sell is one we have walked ourselves, with guides who grew up in the region they show you.',
+      'We are a Vietnamese tour operator based in Hanoi. Every itinerary we sell is one we have walked ourselves, with guides who grew up in the region they show you.',
       'We run our own departures rather than reselling other people’s seats. That means when plans change — a storm in Quang Binh, a road closed near Sa Pa — you talk to the people who can actually change them.',
     ],
     licenseLabel: 'International tour operator licence',
@@ -351,6 +351,8 @@ export const content: SiteContent = {
     description:
       'No booking form. Call or message us and you will be talking to the person who plans the trip.',
     hotlineLabel: 'Hotline',
+    hotlineDisplay: '+84 332 146 395',
+    address: '15 alley 10/16/11 Kim Ma Thuong street, Ngoc Ha ward, Ba Dinh, Hanoi, Vietnam',
     emailLabel: 'Email',
     hoursLabel: 'Opening hours',
     hours: 'Monday to Sunday, 8:00 to 20:00',

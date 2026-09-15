@@ -31,7 +31,12 @@ const jsonLd = JSON.stringify({
   name: company.name,
   url: canonical,
   telephone: company.hotline,
-  address: { '@type': 'PostalAddress', streetAddress: company.address, addressCountry: 'VN' },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: company.mapsQuery,
+    addressLocality: locale === 'vi' ? 'Hà Nội' : 'Hanoi',
+    addressCountry: 'VN',
+  },
   areaServed: { '@type': 'Country', name: 'Vietnam' },
   inLanguage: locale,
 });

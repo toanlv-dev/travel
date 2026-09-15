@@ -27,15 +27,17 @@ export function MobileCallBar() {
           <MessageCircle aria-hidden="true" className="size-5" />
           {content.mobileBar.zalo}
         </a>
-        <a
-          href={company.messenger}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${itemClass} text-ink`}
-        >
-          <Send aria-hidden="true" className="size-5" />
-          {content.mobileBar.messenger}
-        </a>
+        {company.messenger && (
+          <a
+            href={company.messenger}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${itemClass} text-ink`}
+          >
+            <Send aria-hidden="true" className="size-5" />
+            {content.mobileBar.messenger}
+          </a>
+        )}
       </div>
     </nav>
   );

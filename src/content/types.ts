@@ -228,6 +228,10 @@ export interface SiteContent {
     heading: string;
     description: string;
     hotlineLabel: string;
+    /** Cách viết số cho người đọc: bản vi dùng số nội địa, bản en dùng +84 */
+    hotlineDisplay: string;
+    /** Địa chỉ viết theo đúng ngôn ngữ của bản — số thật để tra bản đồ nằm ở company.mapsQuery */
+    address: string;
     emailLabel: string;
     hoursLabel: string;
     /** Ví dụ "8:00–20:00, thứ Hai–Chủ nhật" — cách viết khác nhau giữa hai ngôn ngữ */

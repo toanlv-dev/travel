@@ -30,7 +30,7 @@ export function ContactCta() {
             className="inline-flex min-h-11 items-center gap-3 text-h1 font-bold text-white lg:text-h1-lg"
           >
             <Phone aria-hidden="true" className="size-7 text-primary-300" />
-            {company.hotlineDisplay}
+            {content.contact.hotlineDisplay}
           </a>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -43,18 +43,20 @@ export function ContactCta() {
               <MessageCircle aria-hidden="true" className="size-5" />
               {content.mobileBar.zalo}
             </a>
-            <a
-              href={company.messenger}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                buttonVariants({ variant: 'outline' }),
-                'flex-1 border-white/40 bg-transparent text-white hover:border-white hover:text-white',
-              )}
-            >
-              <Send aria-hidden="true" className="size-5" />
-              {content.mobileBar.messenger}
-            </a>
+            {company.messenger && (
+              <a
+                href={company.messenger}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  buttonVariants({ variant: 'outline' }),
+                  'flex-1 border-white/40 bg-transparent text-white hover:border-white hover:text-white',
+                )}
+              >
+                <Send aria-hidden="true" className="size-5" />
+                {content.mobileBar.messenger}
+              </a>
+            )}
           </div>
         </div>
 
@@ -87,7 +89,7 @@ export function ContactCta() {
               <MapPin aria-hidden="true" className={infoIcon} />
               {content.contact.addressLabel}
             </dt>
-            <dd className="mt-1 text-body text-white">{company.address}</dd>
+            <dd className="mt-1 text-body text-white">{content.contact.address}</dd>
             <dd>
               <a
                 href={mapsUrl}

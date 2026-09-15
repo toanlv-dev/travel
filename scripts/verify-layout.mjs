@@ -469,10 +469,31 @@ const navWrap = await p6.evaluate(() => {
   if (!links.length) return null;
   const tops = new Set(links.map((a) => Math.round(a.getBoundingClientRect().top)));
   const header = document.querySelector('header').getBoundingClientRect();
-  return { rows: tops.size, headerH: header.height, count: links.length };
+  // Chữ TRONG một mục bị xuống dòng thì các mục vẫn cùng một hàng — phải đo riêng.
+  // Không đo bằng chiều cao (min-h-11 làm mọi link cao 44px) mà đếm số dòng của chính CHỮ:
+  // lấy rect của từng text node rồi đếm số mốc `top` khác nhau.
+  const textLines = (el) => {
+    const tops = new Set();
+    for (const node of el.childNodes) {
+      if (node.nodeType !== Node.TEXT_NODE || !node.textContent.trim()) continue;
+      const r = document.createRange();
+      r.selectNodeContents(node);
+      for (const rect of r.getClientRects()) tops.add(Math.round(rect.top));
+    }
+    return tops.size;
+  };
+  const wrapped = links
+    .concat([...document.querySelectorAll('header > div > a, header > div > div > a')])
+    .filter((a) => textLines(a) > 1)
+    .map((a) => a.textContent.trim().slice(0, 20));
+  return { rows: tops.size, headerH: header.height, count: links.length, wrapped };
 });
 check(navWrap?.rows === 1, `menu ${navWrap?.count} mục nằm trên 1 hàng (đang ${navWrap?.rows} hàng)`);
 check((navWrap?.headerH ?? 0) <= 88, `header không bị đội cao (${Math.round(navWrap?.headerH ?? 0)}px)`);
+check(
+  navWrap !== null && navWrap.wrapped.length === 0,
+  `không mục nào trong header bị xuống dòng (${navWrap?.wrapped.join(', ') || 'sạch'})`,
+);
 await c6.close();
 
 // Khách hàng · cảm nhận · thư viện ảnh
@@ -640,9 +661,15 @@ const contact = await p11.evaluate(() => {
     iframes: sec.querySelectorAll('iframe').length,
   };
 });
-check(/^tel:\d{8,}$/.test(contact.tel), `hotline là link gọi được (${contact.tel})`);
+// Dạng E.164 có dấu + là đúng chuẩn: khách nước ngoài bấm gọi được ngay
+check(/^tel:\+?\d{8,}$/.test(contact.tel), `hotline là link gọi được (${contact.tel})`);
 check(contact.telSize >= 28, `hotline in cỡ lớn (${contact.telSize}px)`);
-check(!!contact.zalo && !!contact.messenger, `có nút Zalo và Messenger (${contact.zalo} · ${contact.messenger})`);
+// Messenger tự ẩn khi company.messenger còn null — chưa có trang thì không được trỏ vào link chết
+check(!!contact.zalo, `có nút Zalo (${contact.zalo})`);
+check(
+  contact.messenger === '' || /^https:\/\/m\.me\//.test(contact.messenger),
+  contact.messenger ? `nút Messenger trỏ đúng m.me (${contact.messenger})` : 'chưa có Messenger → nút tự ẩn, không có link chết',
+);
 check(!!contact.mail, `có link email (${contact.mail})`);
 // Đã chốt: KHÔNG nhúng iframe bản đồ, chỉ link ra Google Maps
 check(contact.iframes === 0 && !!contact.maps, `bản đồ là link, không phải iframe (${contact.iframes} iframe)`);

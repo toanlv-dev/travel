@@ -32,7 +32,8 @@ export function Header() {
         <a
           href="#main"
           className={cn(
-            'flex min-h-11 items-center text-h4 font-bold',
+            // Tên công ty 19 ký tự: ở 375px phải để 16px mới đủ chỗ cho nút đổi ngôn ngữ + menu
+            'flex min-h-11 items-center whitespace-nowrap text-body font-bold sm:text-h4',
             solid ? 'text-primary-700' : 'text-white drop-shadow-[0_1px_8px_rgba(0,0,0,.5)]',
           )}
         >
@@ -45,7 +46,8 @@ export function Header() {
               key={item.anchor}
               href={`#${item.anchor}`}
               className={cn(
-                'flex min-h-11 items-center rounded-sm px-3 text-body transition-colors duration-hover',
+                // Tên công ty dài nên ở 1024px phải bóp chữ menu lại, không thì mỗi mục rớt xuống 2 dòng
+                'flex min-h-11 items-center whitespace-nowrap rounded-sm px-2 text-small transition-colors duration-hover xl:px-3 xl:text-body',
                 solid
                   ? 'text-ink hover:text-primary-700'
                   : 'text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,.5)] hover:text-white',
@@ -61,7 +63,7 @@ export function Header() {
 
           <a
             href={`tel:${company.hotline}`}
-            className={cn(buttonVariants({ variant: 'primary' }), 'hidden lg:inline-flex')}
+            className={cn(buttonVariants({ variant: 'primary' }), 'hidden whitespace-nowrap lg:inline-flex')}
           >
             <Phone aria-hidden="true" className="size-4" />
             {content.header.callCta}
@@ -114,7 +116,7 @@ export function Header() {
                   className={cn(buttonVariants({ variant: 'primary', size: 'lg' }), 'mt-4')}
                 >
                   <Phone aria-hidden="true" className="size-5" />
-                  {company.hotlineDisplay}
+                  {content.contact.hotlineDisplay}
                 </a>
               </Dialog.Content>
             </Dialog.Portal>

@@ -4,9 +4,9 @@ import type { SiteContent } from './types.ts';
 export const content: SiteContent = {
   locale: 'vi',
   seo: {
-    title: 'Công ty Du lịch Việt — Tour trong nước trọn gói từ 2013',
+    title: 'VIVA Vietnam Travel — Tour trong nước trọn gói, văn phòng tại Hà Nội',
     description:
-      'Công ty lữ hành có giấy phép, tổ chức tour trong nước từ Sa Pa đến Phú Quốc. 12 năm kinh nghiệm, hơn 8.500 lượt khách, đánh giá trung bình 4,9/5.',
+      'Công ty lữ hành có giấy phép, văn phòng tại Hà Nội, tổ chức tour trọn gói khắp ba miền. Gọi 0332 146 395 để được tư vấn miễn phí.',
     ogLocale: 'vi_VN',
   },
   nav: [
@@ -50,7 +50,7 @@ export const content: SiteContent = {
     overline: 'Về chúng tôi',
     heading: 'Công ty lữ hành, không phải trang đặt chỗ',
     body: [
-      'Chúng tôi là công ty lữ hành Việt Nam, trụ sở tại TP. Hồ Chí Minh. Mọi hành trình chúng tôi bán đều là hành trình chúng tôi đã tự đi, với hướng dẫn viên lớn lên ở chính vùng đất đó.',
+      'Chúng tôi là công ty lữ hành Việt Nam, văn phòng tại Hà Nội. Mọi hành trình chúng tôi bán đều là hành trình chúng tôi đã tự đi, với hướng dẫn viên lớn lên ở chính vùng đất đó.',
       'Chúng tôi tự tổ chức đoàn chứ không bán lại chỗ của đơn vị khác. Nghĩa là khi kế hoạch thay đổi — bão ở Quảng Bình, đường lên Sa Pa tắc — người bạn gọi chính là người quyết được.',
     ],
     licenseLabel: 'Giấy phép lữ hành quốc tế',
@@ -350,6 +350,8 @@ export const content: SiteContent = {
     description:
       'Không có form đặt tour. Gọi hoặc nhắn tin là gặp thẳng người lên lịch trình cho chuyến đi.',
     hotlineLabel: 'Hotline',
+    hotlineDisplay: '0332 146 395',
+    address: 'Số 15, ngách 10/16/11 phố Kim Mã Thượng, phường Ngọc Hà, quận Ba Đình, Hà Nội',
     emailLabel: 'Email',
     hoursLabel: 'Giờ làm việc',
     hours: 'Thứ Hai đến Chủ nhật, 8:00 – 20:00',

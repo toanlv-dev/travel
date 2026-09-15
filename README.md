@@ -156,25 +156,33 @@ server {
 
 ## 7. Checklist nội dung cần khách gửi
 
-Trang đang chạy bằng **nội dung mẫu**. Những chỗ dưới đây nhìn rõ là chỗ chờ (ô viền đứt, câu ghi
-"nội dung mẫu"), và câu ghi chú đó **tự biến mất** khi có dữ liệu thật.
+Đã nhận ngày 2026-09-15: **tên công ty, địa chỉ, email, số điện thoại** — đã vào code.
+Phần còn lại vẫn là **nội dung mẫu**; những chỗ đó nhìn rõ là chỗ chờ (ô viền đứt, câu ghi "nội dung
+mẫu"), và câu ghi chú **tự biến mất** khi có dữ liệu thật.
 
 | # | Cần gửi | Vào file | Đang là |
 |---|---------|----------|---------|
-| 1 | Tên công ty, số giấy phép lữ hành, địa chỉ | `src/data/company.ts` | "Vietnam Travel Co.", số giấy phép mẫu |
-| 2 | Hotline, email, link Zalo, link Messenger | `src/data/company.ts` | số 0912345678, `example.com` |
-| 3 | Link Facebook / YouTube | `src/data/company.ts` → `socials` | link mẫu |
-| 4 | Domain thật | `src/data/company.ts` → `siteUrl` | `https://example.com` |
-| 5 | Logo công ty | `public/` + Header/Footer | đang in tên bằng chữ |
-| 6 | **Logo khách hàng** (kèm cho phép đăng) | `public/images/clients/` + `src/data/clients.ts` | 6 ô viền đứt "Logo khách hàng 1…6" |
-| 7 | **Cảm nhận thật của khách** (tên, chức danh, cho phép đăng) | `src/content/{en,vi}.ts` → `testimonials` | 5 cảm nhận mẫu, tên "Khách hàng A…E" |
-| 8 | **Ảnh thật từ các chuyến đi** | `assets-src/images/gallery/` + `src/data/images.ts` | dùng tạm ảnh phong cảnh đã tải |
-| 9 | Bài viết của công ty | `src/content/{en,vi}.ts` → `posts` | 3 bài cẩm nang mẫu |
-| 10 | Số liệu thật (số năm, số khách, số chuyến) | `src/content/{en,vi}.ts` → `stats` | 12 năm · 8.500 khách · 4,9/5 |
-| 11 | Ảnh OG (1200×630) cho khi chia sẻ link | `public/` + `index.html` | chưa có |
+| 1 | ~~Tên công ty, địa chỉ~~ | `company.ts` · `content.contact.address` | ✅ **VIVA VIETNAM TRAVEL**, Ngọc Hà, Hà Nội |
+| 2 | ~~Hotline, email~~ | `company.ts` · `content.contact.hotlineDisplay` | ✅ +84 332 146 395 · vivavietnamtravel@gmail.com |
+| 2b | **Xác nhận số điện thoại có dùng Zalo** | `src/data/company.ts` → `zalo` | đang suy ra `zalo.me/0332146395` |
+| 3 | **Số giấy phép lữ hành** | `src/data/company.ts` → `licenseNo` | `null` → **dòng giấy phép đang ẩn hẳn** ở About và Footer |
+| 4 | **Link trang Facebook** (cho nút Messenger) | `src/data/company.ts` → `messenger` | `null` → **nút Messenger đang ẩn** |
+| 5 | Link Facebook / YouTube cho footer | `src/data/company.ts` → `socials` | chỉ còn Zalo |
+| 6 | Domain thật | `src/data/company.ts` → `siteUrl` | `https://example.com` |
+| 7 | Logo công ty | `public/` + Header/Footer | đang in tên bằng chữ |
+| 8 | **Logo khách hàng** (kèm cho phép đăng) | `public/images/clients/` + `src/data/clients.ts` | 6 ô viền đứt "Logo khách hàng 1…6" |
+| 9 | **Cảm nhận thật của khách** (tên, chức danh, cho phép đăng) | `src/content/{en,vi}.ts` → `testimonials` | 5 cảm nhận mẫu, tên "Khách hàng A…E" |
+| 10 | **Ảnh thật từ các chuyến đi** | `assets-src/images/gallery/` + `src/data/images.ts` | dùng tạm ảnh phong cảnh đã tải |
+| 11 | Bài viết của công ty | `src/content/{en,vi}.ts` → `posts` | 3 bài cẩm nang mẫu |
+| 12 | **Số liệu thật** (số năm, số khách, đánh giá) | `src/content/{en,vi}.ts` → `stats` | ⚠️ 12 năm · 8.500 khách · 4,9/5 — **đang là số mẫu, hiện như thật** |
+| 13 | Ảnh OG (1200×630) cho khi chia sẻ link | `public/` + `index.html` | chưa có |
 
-> ⚠️ Mục **6, 7, 8** là phần tạo niềm tin — cũng là phần **tuyệt đối không được bịa**. Không đặt tên
-> doanh nghiệp có thật khi chưa xin phép, không gán lời chứng thực cho người có thật.
+> ⚠️ Mục **8, 9, 10, 12** là phần tạo niềm tin — cũng là phần **tuyệt đối không được bịa**. Không đặt
+> tên doanh nghiệp có thật khi chưa xin phép, không gán lời chứng thực cho người có thật.
+>
+> Ba thứ chưa có thì **ẩn hẳn** thay vì để giá trị bịa: số giấy phép (mục 3), nút Messenger (mục 4)
+> và nút Facebook/YouTube (mục 5). Riêng **số liệu ở mục 12 vẫn đang hiện như thật** — nhớ thay
+> trước khi trang lên sóng.
 
 Mỗi mục ở cột "file" đều là chữ hiển thị → **phải sửa cả `en.ts` lẫn `vi.ts`**.
 
