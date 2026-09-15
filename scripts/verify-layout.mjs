@@ -122,7 +122,7 @@ for (const { label, path } of PAGES) {
   }
 
   // Thanh gọi nhanh: hiện ở mobile, ẩn từ md
-  const barSel = 'div.fixed.inset-x-0.bottom-0';
+  const barSel = 'nav.fixed.inset-x-0.bottom-0';
   const bar375 = await page.evaluate((sel) => {
     const el = document.querySelector(sel);
     return el ? getComputedStyle(el).display : 'không thấy';
@@ -161,9 +161,11 @@ for (const { label, path } of PAGES) {
 
   // Nền section phải xen kẽ — hai section liền nhau không cùng màu nền
   const bgs = await page.evaluate(() =>
-    [...document.querySelectorAll('section')].map((s) => getComputedStyle(s).backgroundColor),
+    [...document.querySelectorAll('section')]
+      // #hero phủ kín bằng ảnh, màu nền của nó chỉ hiện lúc ảnh chưa về → không tính xen kẽ
+      .filter((s) => s.id !== 'hero')
+      .map((s) => getComputedStyle(s).backgroundColor),
   );
-  // #hero trong suốt (ảnh nền) nên bỏ qua khi so nền xen kẽ
   const solid = bgs.filter((b) => b !== 'rgba(0, 0, 0, 0)');
   const alternating = solid.every((bg, i) => i === 0 || bg !== solid[i - 1]);
   check(alternating && solid.length >= 3, `nền xen kẽ (${solid.length} section đặc)`);
@@ -646,7 +648,7 @@ await p11.waitForTimeout(800);
 await p11.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
 await p11.waitForTimeout(500);
 const covered = await p11.evaluate(() => {
-  const bar = document.querySelector('div.fixed.inset-x-0.bottom-0')?.getBoundingClientRect();
+  const bar = document.querySelector('nav.fixed.inset-x-0.bottom-0')?.getBoundingClientRect();
   const last = document.querySelector('footer a[href="#main"]')?.getBoundingClientRect();
   return bar && last ? { bar: Math.round(bar.top), last: Math.round(last.bottom) } : null;
 });

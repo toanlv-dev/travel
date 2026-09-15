@@ -29,28 +29,26 @@ export function Gallery() {
 
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {content.gallery.items.map((g, i) => (
-          <Reveal key={g.slug} delay={i * 40}>
-            <li>
-              <button
-                ref={(el) => {
-                  tiles.current[i] = el;
-                }}
-                type="button"
-                onClick={() => {
-                  setIndex(i);
-                  setOpen(true);
-                }}
-                className="block w-full overflow-hidden rounded-md shadow-1 transition-shadow duration-hover hover:shadow-2"
-              >
-                <SmartImage
-                  image={images.gallery[g.slug]}
-                  alt={g.alt}
-                  ratio="4/3"
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                />
-                <span className="sr-only">{content.gallery.openLabel}</span>
-              </button>
-            </li>
+          <Reveal as="li" key={g.slug} delay={i * 40}>
+            <button
+              ref={(el) => {
+                tiles.current[i] = el;
+              }}
+              type="button"
+              onClick={() => {
+                setIndex(i);
+                setOpen(true);
+              }}
+              className="block w-full overflow-hidden rounded-md shadow-1 transition-shadow duration-hover hover:shadow-2"
+            >
+              <SmartImage
+                image={images.gallery[g.slug]}
+                alt={g.alt}
+                ratio="4/3"
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, calc(50vw - 1.5rem)"
+              />
+              <span className="sr-only">{content.gallery.openLabel}</span>
+            </button>
           </Reveal>
         ))}
       </ul>

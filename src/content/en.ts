@@ -367,6 +367,7 @@ export const content: SiteContent = {
     backToTop: 'Back to top',
   },
   mobileBar: {
+    navLabel: 'Quick contact',
     call: 'Call now',
     zalo: 'Zalo',
     messenger: 'Message',

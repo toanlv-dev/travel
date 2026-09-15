@@ -28,14 +28,17 @@ export function WhyUs() {
         {content.whyUs.items.map((item, i) => {
           const Icon = ICONS[item.icon];
           return (
-            <Reveal key={item.title} delay={i * 60}>
-              <li className="h-full rounded-lg bg-base p-5 shadow-1">
-                <span className="flex size-11 items-center justify-center rounded-md bg-primary-50">
-                  <Icon aria-hidden="true" className="size-6 text-primary-600" />
-                </span>
-                <h3 className="mt-4 text-h3 text-ink">{item.title}</h3>
-                <p className="mt-2 text-body text-ink-muted">{item.description}</p>
-              </li>
+            <Reveal
+              as="li"
+              key={item.title}
+              delay={i * 60}
+              className="h-full rounded-lg bg-base p-5 shadow-1"
+            >
+              <span className="flex size-11 items-center justify-center rounded-md bg-primary-50">
+                <Icon aria-hidden="true" className="size-6 text-primary-600" />
+              </span>
+              <h3 className="mt-4 text-h3 text-ink">{item.title}</h3>
+              <p className="mt-2 text-body text-ink-muted">{item.description}</p>
             </Reveal>
           );
         })}

@@ -124,6 +124,8 @@ export interface Post {
 }
 
 export interface MobileBarContent {
+  /** aria-label cho <nav> của thanh dính đáy */
+  navLabel: string;
   call: string;
   zalo: string;
   messenger: string;

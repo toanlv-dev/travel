@@ -11,13 +11,16 @@ import sharp from 'sharp';
 
 const SRC = 'assets-src/images';
 const OUT = 'public/images';
-const WIDTHS = [480, 960, 1600];
+// Mốc 720: điện thoại thường là ~412px CSS ở DPR 1.75 → cần ~720px, ép lên 960 là thừa ~40% byte
+const WIDTHS = [480, 720, 960, 1600];
 // Card tour hiển thị ~33vw, card điểm đến ~22vw → ngay cả ở DPR 2 cũng không quá 960px.
 // Sinh thêm mốc 1600 chỉ tổ phình repo mà trình duyệt không bao giờ chọn.
 const MAX_WIDTH_BY_GROUP = { tours: 960, destinations: 960 };
 // Ảnh Commons hầu hết là khổ ngang; card cần tỉ lệ cố định nên cắt theo nhóm.
 // 'attention' để sharp tự chọn vùng nhiều chi tiết thay vì cắt giữa một cách máy móc.
 const RATIO_BY_GROUP = { destinations: 3 / 4, tours: 4 / 3 };
+// hero nằm dưới lớp phủ tối 46–76%; ảnh card hiển thị nhỏ → cả hai hạ chất lượng không nhìn ra
+const QUALITY_BY_GROUP = { hero: 60, tours: 68, destinations: 68, about: 70 };
 const INPUT_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif']);
 
 async function walk(dir) {
@@ -53,8 +56,9 @@ for (const file of files) {
     const base = ratio
       ? sharp(file).resize(w, Math.round(w / ratio), { fit: 'cover', position: 'attention' })
       : sharp(file).resize({ width: w, withoutEnlargement: true });
-    await base.clone().webp({ quality: 78 }).toFile(path.join(outDir, `${slug}-${w}.webp`));
-    await base.clone().jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(outDir, `${slug}-${w}.jpg`));
+    const q = QUALITY_BY_GROUP[group] ?? 78;
+    await base.clone().webp({ quality: q }).toFile(path.join(outDir, `${slug}-${w}.webp`));
+    await base.clone().jpeg({ quality: q + 2, mozjpeg: true }).toFile(path.join(outDir, `${slug}-${w}.jpg`));
   }
   console.log(`✓ ${rel}`);
 }

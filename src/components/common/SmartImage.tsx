@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { cn } from '@/lib/cn';
 import type { AspectRatio, ImageRef } from '@/types';
 
@@ -34,15 +33,15 @@ export function SmartImage({
   className,
   imgClassName,
 }: SmartImageProps) {
-  const [loaded, setLoaded] = useState(false);
   // Mốc lớn nhất làm src dự phòng cho trình duyệt không hiểu srcset
   const fallbackWidth = image.widths[image.widths.length - 1];
 
   return (
     <div
       className={cn(
-        'overflow-hidden bg-soft',
-        fill ? 'absolute inset-0' : 'relative',
+        'overflow-hidden',
+        // Ảnh phủ nền (hero) để lộ nền của section; ảnh trong card thì nền xám nhạt lúc chờ
+        fill ? 'absolute inset-0' : 'relative bg-soft',
         className,
       )}
       style={fill ? undefined : { aspectRatio: ratio }}
@@ -57,13 +56,9 @@ export function SmartImage({
           loading={priority ? 'eager' : 'lazy'}
           decoding={priority ? 'sync' : 'async'}
           fetchPriority={priority ? 'high' : 'auto'}
-          onLoad={() => setLoaded(true)}
-          className={cn(
-            'absolute inset-0 h-full w-full object-cover',
-            'transition-opacity duration-toggle ease-out',
-            loaded ? 'opacity-100' : 'opacity-0',
-            imgClassName,
-          )}
+          // KHÔNG mờ-rồi-hiện bằng JS: HTML dựng sẵn lúc build sẽ mang opacity-0 và ảnh phải
+          // chờ hydrate xong mới hiện, đẩy LCP ra sau. Khung đã khoá aspect-ratio nên không giật.
+          className={cn('absolute inset-0 h-full w-full object-cover', imgClassName)}
         />
       </picture>
     </div>

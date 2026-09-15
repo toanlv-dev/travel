@@ -4,21 +4,21 @@
 :root {
   /* ---------- Font ---------- */
   --font-sans: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Lora Variable', Lora, Georgia, 'Times New Roman', serif;
+  --font-serif: Lora, Georgia, 'Times New Roman', serif;
 
   /* ---------- Primary: Xanh lá thiên nhiên ---------- */
   --c-primary-50: #f1f8ee;
   --c-primary-100: #dcefd3;
   --c-primary-300: #96cc7c;
   --c-primary-500: #63ab45; /* chỉ mảng nền / icon lớn — 2.9:1, KHÔNG dùng cho chữ nhỏ */
-  --c-primary-600: #4c8c33; /* nút, link, chữ nhấn — 4.6:1 */
+  --c-primary-600: #478230; /* nút, link, chữ nhấn — 4.66:1 với trắng (đo bằng axe) */
   --c-primary-700: #3b6e28; /* hover, chữ trên nền nhạt — 6.6:1 */
   --c-accent-500: #f2a93b;
 
   /* ---------- Trung tính ---------- */
   --c-ink: #14181f;
   --c-ink-muted: #525c6b;
-  --c-ink-faint: #7b8595;
+  --c-ink-faint: #68717f; /* 4.66:1 trên nền soft — bản #7b8595 cũ chỉ 3.52:1 */
   --c-line: #e4e8ec;
   --c-line-strong: #cbd2da;
 

@@ -1,8 +1,8 @@
 import type { ImageRef } from '@/types';
 
-const W = [480, 960, 1600];
+const W = [480, 720, 960, 1600];
 /** Card nhỏ hơn 960px kể cả ở DPR 2 nên không sinh mốc 1600 — xem scripts/optimize-images.mjs */
-const W_CARD = [480, 960];
+const W_CARD = [480, 720, 960];
 const set = (dir: string, slugs: string[], widths = W): Record<string, ImageRef> =>
   Object.fromEntries(slugs.map((s) => [s, { name: `${dir}/${s}`, widths }]));
 

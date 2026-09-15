@@ -366,6 +366,7 @@ export const content: SiteContent = {
     backToTop: 'Lên đầu trang',
   },
   mobileBar: {
+    navLabel: 'Liên hệ nhanh',
     call: 'Gọi ngay',
     zalo: 'Zalo',
     messenger: 'Nhắn tin',

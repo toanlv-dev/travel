@@ -8,7 +8,8 @@ const itemClass =
 /** Thanh liên hệ dính đáy, chỉ hiện dưới `md` — trang không có form nên đây là lối chuyển đổi chính trên mobile. */
 export function MobileCallBar() {
   return (
-    <div
+    <nav
+      aria-label={content.mobileBar.navLabel}
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-base shadow-3 md:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
@@ -36,6 +37,6 @@ export function MobileCallBar() {
           {content.mobileBar.messenger}
         </a>
       </div>
-    </div>
+    </nav>
   );
 }

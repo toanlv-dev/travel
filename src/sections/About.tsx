@@ -17,7 +17,7 @@ export function About() {
             image={images.about}
             alt={content.about.imageAlt}
             ratio="3/2"
-            sizes="(min-width: 1024px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 50vw, calc(100vw - 2rem)"
             className="rounded-xl shadow-2"
           />
         </Reveal>

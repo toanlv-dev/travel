@@ -16,6 +16,9 @@ if (requested !== 'en' && requested !== 'vi') {
 const locale: Locale = requested;
 const content = byLocale[locale];
 
+/** Bản build phụ để dựng sẵn HTML — xem scripts/prerender.mjs */
+const ssrBuild = process.env.SSR_BUILD === '1';
+
 /** '/' là tiếng Anh (mặc định), '/vi/' là tiếng Việt */
 const base = locale === 'en' ? '/' : '/vi/';
 const canonical = `${company.siteUrl}${base}`;
@@ -53,9 +56,74 @@ function htmlMeta(): Plugin {
   };
 }
 
+/** sitemap.xml + robots.txt chỉ sinh ở bản 'en' — chúng nằm ở gốc domain, không nhân đôi cho /vi/. */
+function siteFiles(): Plugin {
+  return {
+    name: 'sitemap-robots',
+    apply: 'build',
+    generateBundle() {
+      if (locale !== 'en') return;
+      const urls = ['/', '/vi/']
+        .map(
+          (path) => `  <url>
+    <loc>${company.siteUrl}${path}</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="${company.siteUrl}/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="${company.siteUrl}/vi/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${company.siteUrl}/" />
+  </url>`,
+        )
+        .join('\n');
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sitemap.xml',
+        source: `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${urls}
+</urlset>
+`,
+      });
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'robots.txt',
+        source: `User-agent: *\nAllow: /\nSitemap: ${company.siteUrl}/sitemap.xml\n`,
+      });
+    },
+  };
+}
+
+/** Nhúng thẳng CSS vào HTML.
+ *  HTML đã dựng sẵn nên chữ vẽ được ngay khi tải xong HTML — nhưng <link rel="stylesheet"> chặn
+ *  render thêm một vòng round-trip (Lighthouse báo 450–750ms trên 4G giả lập). Bộ CSS chỉ 7KB gzip
+ *  nên nhúng luôn: mất một vòng đi về, và @font-face được phát hiện sớm hơn. */
+function inlineCss(): Plugin {
+  return {
+    name: 'inline-css',
+    apply: 'build',
+    enforce: 'post',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        const bundle = ctx.bundle ?? {};
+        for (const [file, asset] of Object.entries(bundle)) {
+          if (!file.endsWith('.css') || asset.type !== 'asset') continue;
+          let css = String(asset.source);
+          if (process.env.FONT_DISPLAY) css = css.replace(/font-display:swap/g, `font-display:${process.env.FONT_DISPLAY}`);
+          html = html
+            .replace(new RegExp(`<link[^>]+href="[^"]*${file.split('/').pop()}"[^>]*>`), '')
+            .replace('</head>', `<style>${css}</style></head>`);
+          delete bundle[file];
+        }
+        return html;
+      },
+    },
+  };
+}
+
 export default defineConfig({
   base,
-  plugins: [react(), htmlMeta()],
+  plugins: [react(), htmlMeta(), inlineCss(), siteFiles()],
   resolve: {
     alias: {
       // Component chỉ viết: import { content } from '@content'
@@ -63,9 +131,11 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  build: {
-    outDir: locale === 'en' ? 'dist' : 'dist/vi',
-    // Chỉ bản 'en' được xoá dist — nếu không sẽ thổi bay dist/vi vừa build
-    emptyOutDir: locale === 'en',
-  },
+  build: ssrBuild
+    ? { ssr: 'src/entry-server.tsx', outDir: `dist-ssr/${locale}`, emptyOutDir: true }
+    : {
+        outDir: locale === 'en' ? 'dist' : 'dist/vi',
+        // Chỉ bản 'en' được xoá dist — nếu không sẽ thổi bay dist/vi vừa build
+        emptyOutDir: locale === 'en',
+      },
 });

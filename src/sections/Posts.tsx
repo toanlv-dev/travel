@@ -23,34 +23,32 @@ export function Posts() {
 
       <ul className="grid gap-5 md:grid-cols-3">
         {content.posts.items.map((post, i) => (
-          <Reveal key={post.slug} delay={i * 60}>
-            <li className="h-full">
-              {/* Trang không có bài chi tiết riêng — bấm card mở hộp đọc, không phải link chết */}
-              <button
-                onClick={() => setOpen(post)}
-                className="flex h-full w-full flex-col overflow-hidden rounded-lg bg-base text-left shadow-1 transition-shadow duration-hover hover:shadow-2"
-              >
-                <SmartImage
-                  image={images.posts[post.slug]}
-                  alt={post.title}
-                  ratio="16/9"
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                />
-                <div className="flex flex-1 flex-col p-5">
-                  <p className="text-small text-primary-700">{post.category}</p>
-                  <h3 className="mt-1 text-h3 text-ink">{post.title}</h3>
-                  <p className="mt-2 flex-1 text-body text-ink-muted">{post.excerpt}</p>
-                  <p className="mt-4 flex items-center gap-2 text-small text-ink-faint">
-                    <span>{post.date}</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{post.readingTime}</span>
-                  </p>
-                  <span className="mt-2 text-body font-semibold text-primary-700">
-                    {content.posts.readMore}
-                  </span>
-                </div>
-              </button>
-            </li>
+          <Reveal as="li" key={post.slug} delay={i * 60} className="h-full">
+            {/* Trang không có bài chi tiết riêng — bấm card mở hộp đọc, không phải link chết */}
+            <button
+              onClick={() => setOpen(post)}
+              className="flex h-full w-full flex-col overflow-hidden rounded-lg bg-base text-left shadow-1 transition-shadow duration-hover hover:shadow-2"
+            >
+              <SmartImage
+                image={images.posts[post.slug]}
+                alt={post.title}
+                ratio="16/9"
+                sizes="(min-width: 768px) 33vw, calc(100vw - 2rem)"
+              />
+              <div className="flex flex-1 flex-col p-5">
+                <p className="text-small text-primary-700">{post.category}</p>
+                <h3 className="mt-1 text-h3 text-ink">{post.title}</h3>
+                <p className="mt-2 flex-1 text-body text-ink-muted">{post.excerpt}</p>
+                <p className="mt-4 flex items-center gap-2 text-small text-ink-faint">
+                  <span>{post.date}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{post.readingTime}</span>
+                </p>
+                <span className="mt-2 text-body font-semibold text-primary-700">
+                  {content.posts.readMore}
+                </span>
+              </div>
+            </button>
           </Reveal>
         ))}
       </ul>

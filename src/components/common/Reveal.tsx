@@ -1,7 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ElementType, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { usePrefersReducedMotion } from '@/lib/usePrefersReducedMotion';
 
 interface RevealProps {
+  /** Phải khớp thẻ cha: trong <ul> thì 'li', trong <dl> thì 'div' — nếu không, danh sách mất ngữ nghĩa */
+  as?: ElementType;
   children: ReactNode;
   /** Trễ nhẹ để các item trong một lưới hiện lần lượt */
   delay?: number;
@@ -9,12 +12,12 @@ interface RevealProps {
 }
 
 /** Hiện dần khi cuộn tới, chạy một lần. */
-export function Reveal({ children, delay = 0, className }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  // Giảm chuyển động: hiện sẵn ngay từ lần render đầu, không quan sát gì cả
-  const [shown, setShown] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  );
+export function Reveal({ as: Tag = 'div', children, delay = 0, className }: RevealProps) {
+  const ref = useRef<HTMLElement>(null);
+  const [scrolledTo, setScrolledTo] = useState(false);
+  const reduced = usePrefersReducedMotion();
+  // Giảm chuyển động: hiện sẵn, khỏi quan sát gì cả
+  const shown = scrolledTo || reduced;
 
   useEffect(() => {
     const el = ref.current;
@@ -23,7 +26,7 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setShown(true);
+          setScrolledTo(true);
           io.disconnect();
         }
       },
@@ -34,7 +37,7 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
   }, [shown]);
 
   return (
-    <div
+    <Tag
       ref={ref}
       data-reveal={shown ? 'shown' : 'hidden'}
       style={{ transitionDelay: shown && delay ? `${delay}ms` : undefined }}
@@ -45,6 +48,6 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
       )}
     >
       {children}
-    </div>
+    </Tag>
   );
 }

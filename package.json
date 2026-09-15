@@ -7,14 +7,18 @@
     "dev": "vite",
     "dev:vi": "cross-env VITE_LOCALE=vi vite",
     "typecheck": "tsc -b",
-    "build:en": "cross-env VITE_LOCALE=en vite build",
-    "build:vi": "cross-env VITE_LOCALE=vi vite build",
+    "build:en": "cross-env VITE_LOCALE=en vite build && cross-env VITE_LOCALE=en SSR_BUILD=1 vite build && cross-env VITE_LOCALE=en node scripts/prerender.mjs",
+    "build:vi": "cross-env VITE_LOCALE=vi vite build && cross-env VITE_LOCALE=vi SSR_BUILD=1 vite build && cross-env VITE_LOCALE=vi node scripts/prerender.mjs",
     "build": "npm run typecheck && npm run build:en && npm run build:vi",
     "preview": "vite preview",
     "lint": "oxlint",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "images": "node scripts/optimize-images.mjs",
-    "verify": "node scripts/verify-layout.mjs"
+    "verify": "node scripts/verify-layout.mjs",
+    "a11y": "node scripts/a11y.mjs",
+    "lh": "node scripts/lighthouse.mjs",
+    "fonts": "node scripts/subset-fonts.mjs",
+    "serve": "node scripts/serve.mjs"
   },
   "dependencies": {
     "@fontsource-variable/lora": "^5.3.0",
@@ -30,12 +34,14 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.6.0",
     "cross-env": "^10.1.0",
+    "lighthouse": "^12.8.2",
     "oxlint": "^1.81.0",
     "playwright": "^1.63.0",
     "postcss": "^8.5.28",

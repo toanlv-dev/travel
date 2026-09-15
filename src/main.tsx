@@ -1,10 +1,15 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import App from './App';
 import './styles/globals.css';
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root')!;
+const app = (
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );
+
+// Bản build có HTML dựng sẵn → hydrate. `npm run dev` thì #root rỗng → render thường.
+if (root.firstChild) hydrateRoot(root, app);
+else createRoot(root).render(app);

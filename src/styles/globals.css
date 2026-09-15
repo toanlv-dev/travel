@@ -1,15 +1,7 @@
-/* Font self-host — chỉ subset latin + vietnamese, 3 weight (400/600/700).
-   Bản tiếng Anh vẫn cần vietnamese để in đúng "Đà Nẵng", "Hạ Long".
-   Bỏ weight 500 để giữ ngân sách: mỗi weight tốn ~33KB cho cả hai subset. */
-@import '@fontsource/be-vietnam-pro/latin-400.css';
-@import '@fontsource/be-vietnam-pro/latin-600.css';
-@import '@fontsource/be-vietnam-pro/latin-700.css';
-@import '@fontsource/be-vietnam-pro/vietnamese-400.css';
-@import '@fontsource/be-vietnam-pro/vietnamese-600.css';
-@import '@fontsource/be-vietnam-pro/vietnamese-700.css';
-/* Lora: file này khai báo mọi subset nhưng unicode-range khiến browser chỉ tải
-   latin + vietnamese italic (~49KB). Các subset cyrillic/math/symbols không được tải. */
-@import '@fontsource-variable/lora/wght-italic.css';
+/* Font đã cắt xuống đúng bộ chữ dùng trên trang — xem scripts/subset-fonts.mjs.
+   Bản @fontsource đầy đủ tốn 141KB/7 file và làm LCP chậm ~0,7s (đo bằng Lighthouse).
+   ⚠️ Đổi nội dung trong src/content/ xong phải chạy lại `npm run fonts`. */
+@import './fonts.css';
 
 @import './tokens.css';
 

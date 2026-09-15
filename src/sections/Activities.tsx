@@ -25,7 +25,8 @@ export function Activities() {
   const [filter, setFilter] = useState<Filter>('all');
   const [open, setOpen] = useState<Tour | null>(null);
 
-  const shown = filter === 'all' ? content.tours.items : content.tours.items.filter((t) => t.region === filter);
+  const shown =
+    filter === 'all' ? content.tours.items : content.tours.items.filter((t) => t.region === filter);
 
   return (
     <Section id="tours" bg="soft" labelledBy="tours-heading">
@@ -57,54 +58,55 @@ export function Activities() {
 
       <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((tour, i) => (
-          <Reveal key={tour.slug} delay={i * 60}>
-            <li className="h-full">
-              {/* Cả card là một nút: không có nút đặt tour, bấm vào chỉ để xem lịch trình */}
-              <button
-                onClick={() => setOpen(tour)}
-                className="flex h-full w-full flex-col overflow-hidden rounded-lg bg-base text-left shadow-1 transition-shadow duration-hover hover:shadow-2"
-              >
-                <div className="relative">
-                  <SmartImage
-                    image={images.tours[tour.slug]}
-                    alt={tour.imageAlt}
-                    ratio="4/3"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  />
-                  <span className="absolute left-3 top-3 rounded-full bg-base/95 px-3 py-1 text-small font-semibold text-primary-700">
-                    {REGION_LABEL[tour.region]}
+          <Reveal as="li" key={tour.slug} delay={i * 60} className="h-full">
+            {/* Cả card là một nút: không có nút đặt tour, bấm vào chỉ để xem lịch trình */}
+            <button
+              onClick={() => setOpen(tour)}
+              className="flex h-full w-full flex-col overflow-hidden rounded-lg bg-base text-left shadow-1 transition-shadow duration-hover hover:shadow-2"
+            >
+              <div className="relative">
+                <SmartImage
+                  image={images.tours[tour.slug]}
+                  alt={tour.imageAlt}
+                  ratio="4/3"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, calc(100vw - 2rem)"
+                />
+                <span className="bg-base/95 absolute left-3 top-3 rounded-full px-3 py-1 text-small font-semibold text-primary-700">
+                  {REGION_LABEL[tour.region]}
+                </span>
+              </div>
+
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="line-clamp-2 text-h3 text-ink">{tour.name}</h3>
+
+                <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-small text-ink-muted">
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin aria-hidden="true" className="size-4" />
+                    {tour.province}
                   </span>
-                </div>
-
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="line-clamp-2 text-h3 text-ink">{tour.name}</h3>
-
-                  <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-small text-ink-muted">
-                    <span className="inline-flex items-center gap-1.5">
-                      <MapPin aria-hidden="true" className="size-4" />
-                      {tour.province}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <Clock aria-hidden="true" className="size-4" />
-                      {tour.duration}
-                    </span>
-                  </p>
-
-                  <ul className="mt-3 flex-1 space-y-1.5">
-                    {tour.highlights.map((h) => (
-                      <li key={h} className="flex gap-2 text-small text-ink-muted">
-                        <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-primary-500" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <span className="mt-4 text-body font-semibold text-primary-700">
-                    {content.tours.detailCta}
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock aria-hidden="true" className="size-4" />
+                    {tour.duration}
                   </span>
-                </div>
-              </button>
-            </li>
+                </p>
+
+                <ul className="mt-3 flex-1 space-y-1.5">
+                  {tour.highlights.map((h) => (
+                    <li key={h} className="flex gap-2 text-small text-ink-muted">
+                      <span
+                        aria-hidden="true"
+                        className="mt-2 size-1.5 shrink-0 rounded-full bg-primary-500"
+                      />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+
+                <span className="mt-4 text-body font-semibold text-primary-700">
+                  {content.tours.detailCta}
+                </span>
+              </div>
+            </button>
           </Reveal>
         ))}
       </ul>

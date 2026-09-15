@@ -9,7 +9,13 @@ import { cn } from '@/lib/cn';
 
 export function Hero() {
   return (
-    <section id="hero" aria-labelledby="hero-heading" className="relative min-h-hero overflow-hidden">
+    // Nền đậm nằm sẵn dưới ảnh: chữ hero màu trắng, ảnh chưa về mà nền trắng thì
+    // người dùng nhìn thấy một màn trắng trơn (đo được 2,6s trên 4G giả lập)
+    <section
+      id="hero"
+      aria-labelledby="hero-heading"
+      className="relative min-h-hero overflow-hidden bg-deep"
+    >
       <SmartImage
         image={images.hero}
         alt={content.hero.imageAlt}

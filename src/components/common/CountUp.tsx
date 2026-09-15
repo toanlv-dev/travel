@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { content } from '@content';
+import { usePrefersReducedMotion } from '@/lib/usePrefersReducedMotion';
 
 const LOCALE_TAG = content.locale === 'vi' ? 'vi-VN' : 'en-US';
 const DURATION = 1400;
@@ -14,10 +15,10 @@ interface CountUpProps {
  *  Dấu phân cách nghìn khác nhau giữa hai ngôn ngữ (8,500 và 8.500) nên format theo locale. */
 export function CountUp({ to, decimals = 0, suffix = '' }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [value, setValue] = useState(() =>
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? to : 0,
-  );
-  const done = useRef(value === to);
+  const [counted, setCounted] = useState(0);
+  const done = useRef(false);
+  // Giảm chuyển động: hiện thẳng số cuối, không đếm
+  const value = usePrefersReducedMotion() ? to : counted;
 
   useEffect(() => {
     const el = ref.current;
@@ -34,9 +35,9 @@ export function CountUp({ to, decimals = 0, suffix = '' }: CountUpProps) {
         const tick = (now: number) => {
           const p = Math.min((now - start) / DURATION, 1);
           // easeOutCubic: nhanh lúc đầu rồi chậm dần, đỡ cảm giác máy móc
-          setValue(to * (1 - (1 - p) ** 3));
+          setCounted(to * (1 - (1 - p) ** 3));
           if (p < 1) raf = requestAnimationFrame(tick);
-          else setValue(to);
+          else setCounted(to);
         };
         raf = requestAnimationFrame(tick);
       },
