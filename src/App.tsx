@@ -4,6 +4,8 @@ import { Reveal } from '@/components/common/Reveal';
 import { Section } from '@/components/layout/Section';
 import { SectionHeading } from '@/components/layout/SectionHeading';
 import { About } from '@/sections/About';
+import { Activities } from '@/sections/Activities';
+import { Destinations } from '@/sections/Destinations';
 import { Header } from '@/sections/Header';
 import { Hero } from '@/sections/Hero';
 import { Stats } from '@/sections/Stats';
@@ -25,11 +27,13 @@ export default function App() {
         <Hero />
         <Stats />
         <About />
+        <Activities />
+        <Destinations />
         <WhyUs />
 
         {/* Chỗ giữ cho các section sắp làm — đủ để kiểm anchor scroll và nền xen kẽ */}
         {content.nav
-          .filter((item) => item.anchor !== 'about')
+          .filter((item) => !['about', 'tours', 'destinations'].includes(item.anchor))
           .map((item, i) => (
             <Section
               key={item.anchor}

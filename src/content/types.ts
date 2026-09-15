@@ -55,6 +55,35 @@ export interface WhyItem {
   description: string;
 }
 
+export type Region = 'bac' | 'trung' | 'nam';
+
+export interface TourDay {
+  label: string;
+  detail: string;
+}
+
+/** ⛔ Không có `price`, `bookUrl`, `discount` — trang chỉ giới thiệu, báo giá qua điện thoại. */
+export interface Tour {
+  slug: string;
+  region: Region;
+  name: string;
+  province: string;
+  duration: string;
+  /** Đúng 3 gạch đầu dòng, giữ card đều nhau */
+  highlights: [string, string, string];
+  itinerary: TourDay[];
+  imageAlt: string;
+}
+
+export interface Destination {
+  slug: string;
+  name: string;
+  region: Region;
+  /** Ví dụ "4 tours" / "4 tour" — số tour là chữ vì cách đọc khác nhau giữa hai ngôn ngữ */
+  tourCount: string;
+  imageAlt: string;
+}
+
 export interface MobileBarContent {
   call: string;
   zalo: string;
@@ -90,6 +119,27 @@ export interface SiteContent {
     heading: string;
     description: string;
     items: WhyItem[];
+  };
+  tours: {
+    overline: string;
+    heading: string;
+    description: string;
+    /** Nhãn tab lọc; khoá 'all' luôn đứng đầu */
+    filters: { all: string; bac: string; trung: string; nam: string };
+    /** Nhãn phụ trên card và trong hộp chi tiết */
+    durationLabel: string;
+    detailCta: string;
+    itineraryLabel: string;
+    quoteNote: string;
+    items: Tour[];
+  };
+  destinations: {
+    overline: string;
+    heading: string;
+    description: string;
+    prevLabel: string;
+    nextLabel: string;
+    items: Destination[];
   };
   /** Thanh liên hệ dính đáy, chỉ hiện dưới breakpoint md */
   mobileBar: MobileBarContent;

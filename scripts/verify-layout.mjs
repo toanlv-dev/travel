@@ -35,8 +35,17 @@ for (const { label, path } of PAGES) {
     await page.setViewportSize({ width: w, height: 800 });
     await page.waitForTimeout(120);
     const overflow = await page.evaluate((vw) => {
+      // Slide carousel nằm ngoài khung nhìn là bình thường — chúng bị cha overflow-hidden cắt,
+      // không làm trang cuộn ngang. Chỉ tính phần tử thực sự đẩy rộng trang.
+      const clipped = (el) => {
+        for (let p = el.parentElement; p; p = p.parentElement) {
+          const ox = getComputedStyle(p).overflowX;
+          if (ox === 'hidden' || ox === 'clip' || ox === 'auto' || ox === 'scroll') return true;
+        }
+        return false;
+      };
       const bad = [...document.querySelectorAll('*')].filter(
-        (el) => el.getBoundingClientRect().right > vw + 0.5,
+        (el) => el.getBoundingClientRect().right > vw + 0.5 && !clipped(el),
       );
       return { count: bad.length, doc: document.documentElement.scrollWidth, sample: bad[0]?.tagName };
     }, w);
@@ -237,6 +246,77 @@ for (const [w, dpr, expect] of [[375, 2, '960'], [375, 1, '480'], [1440, 1, '160
   );
   await c.close();
 }
+
+// Tour: lọc theo miền, mở lịch trình, và TUYỆT ĐỐI không có giá / nút đặt tour
+console.log('\n═══ Tour: lọc & lịch trình');
+const c9 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+const p9 = await c9.newPage();
+await p9.goto(BASE + '/', { waitUntil: 'networkidle' });
+await p9.locator('#tours').scrollIntoViewIfNeeded();
+await p9.waitForTimeout(500);
+
+const allCards = await p9.locator('#tours li > button').count();
+check(allCards === 6, `hiện đủ 6 tour (đang ${allCards})`);
+
+const absTop = () => p9.evaluate(() => document.querySelector('#tours ul').getBoundingClientRect().top + window.scrollY);
+const beforeH = await absTop();
+await p9.locator('#tours [role="tab"]').nth(1).click();
+await p9.waitForTimeout(350);
+const filtered = await p9.locator('#tours li > button').count();
+const afterH = await absTop();
+check(filtered === 2, `lọc miền Bắc còn ${filtered} tour (mong đợi 2)`);
+check(Math.abs(beforeH - afterH) < 2, `đổi tab không làm nhảy layout (lệch ${Math.abs(beforeH - afterH).toFixed(1)}px)`);
+
+const selected = await p9.locator('#tours [role="tab"][aria-selected="true"]').count();
+check(selected === 1, `đúng 1 tab được đánh dấu chọn (${selected})`);
+
+await p9.locator('#tours [role="tab"]').first().click();
+await p9.waitForTimeout(300);
+
+// Bàn phím: Enter trên card mở hộp lịch trình, Esc đóng
+await p9.locator('#tours li button').first().focus();
+await p9.keyboard.press('Enter');
+await p9.waitForTimeout(350);
+check(await p9.locator('[role="dialog"]').isVisible(), 'Enter trên card mở hộp lịch trình');
+const dlgText = await p9.locator('[role="dialog"]').innerText();
+check(/\d/.test(dlgText) && dlgText.length > 80, 'hộp lịch trình có nội dung từng ngày');
+check(
+  (await p9.locator('[role="dialog"] a[href^="tel:"]').count()) > 0,
+  'hộp lịch trình có nút gọi',
+);
+await p9.keyboard.press('Escape');
+await p9.waitForTimeout(300);
+check(!(await p9.locator('[role="dialog"]').isVisible()), 'Esc đóng hộp lịch trình');
+
+// Không có giá, không có nút đặt tour — yêu cầu của khách hàng
+const priceLike = await p9.evaluate(() => {
+  const t = document.querySelector('#tours').innerText;
+  const patterns = [/[0-9][0-9.,]*\s*(₫|VND|USD|\$)/i, /\$\s*[0-9]/, /[0-9][.,][0-9]{3}\s*đ/i];
+  return patterns.filter((re) => re.test(t)).map(String);
+});
+check(priceLike.length === 0, `không có giá tiền trên card (${priceLike.join(', ') || 'sạch'})`);
+
+const bookLike = await p9.evaluate(() => {
+  const t = document.querySelector('#tours').innerText.toLowerCase();
+  return ['đặt tour', 'đặt ngay', 'book now', 'book this', 'add to cart'].filter((w) => t.includes(w));
+});
+check(bookLike.length === 0, `không có nút đặt tour (${bookLike.join(', ') || 'sạch'})`);
+
+// Carousel điểm đến: vuốt được và chỉ toàn điểm đến trong nước
+const destCount = await p9.locator('#destinations li figure').count();
+check(destCount === 9, `carousel có 9 điểm đến (đang ${destCount})`);
+const foreign = await p9.evaluate(() => {
+  const t = document.querySelector('#destinations').innerText;
+  return ['Italy', 'Thailand', 'Thái Lan', 'New York', 'Paris', 'Pháp'].filter((w) => t.includes(w));
+});
+check(foreign.length === 0, `không có điểm đến nước ngoài (${foreign.join(', ') || 'sạch'})`);
+
+const first = await p9.evaluate(() => document.querySelector('#destinations li').getBoundingClientRect().left);
+await p9.locator('#destinations button[aria-label]').nth(1).click();
+await p9.waitForTimeout(700);
+const moved = await p9.evaluate(() => document.querySelector('#destinations li').getBoundingClientRect().left);
+check(moved < first - 20, `nút next cuộn carousel (${Math.round(first)} → ${Math.round(moved)})`);
+await c9.close();
 
 // CountUp: đếm một lần rồi dừng, cuộn qua lại không đếm lại
 console.log('\n═══ CountUp');

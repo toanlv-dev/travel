@@ -4,6 +4,8 @@
  *
  *   review: node scripts/fetch-photos.mjs review "<từ khoá>" [--portrait]
  *           → tải ứng viên cỡ nhỏ vào .review/ để xem, in danh sách kèm chỉ số
+ *   multi:  node scripts/fetch-photos.mjs multi [--portrait] "slug=từ khoá" "slug2=từ khoá2" …
+ *           → mỗi slug lấy 3 ứng viên, ghép tất cả vào MỘT ảnh .review/sheet.jpg có đánh nhãn
  *   pick:   node scripts/fetch-photos.mjs pick <nhóm> <slug> <chỉ số>
  *           → tải bản 2400px của ứng viên đó vào _src/<nhóm>/ và ghi CREDITS.md
  */
@@ -74,12 +76,62 @@ if (mode === 'review') {
     console.log(`[${i}] ${c.width}×${c.height}  ${c.license.padEnd(14)} ${c.title.slice(0, 55)}`);
   }
   console.log(`\nXem ảnh trong ${REVIEW_DIR}/ rồi chạy: node scripts/fetch-photos.mjs pick <nhóm> <slug> <chỉ số>`);
+} else if (mode === 'multi') {
+  const portrait = rest.includes('--portrait');
+  const pairs = rest.filter((a) => a !== '--portrait').map((a) => {
+    const i = a.indexOf('=');
+    return [a.slice(0, i), a.slice(i + 1)];
+  });
+
+  await mkdir(REVIEW_DIR, { recursive: true });
+  const sharp = (await import('sharp')).default;
+  const PER = 3;
+  const CW = portrait ? 240 : 320;
+  const CH = portrait ? 320 : 240;
+  const COLS = 6;
+
+  const state = {};
+  const tiles = [];
+  for (const [slug, query] of pairs) {
+    const list = (await search(query, portrait)).slice(0, PER);
+    state[slug] = list;
+    if (!list.length) console.warn(`⚠ không có ứng viên cho "${query}" (${slug})`);
+    for (const [i, c] of list.entries()) {
+      const buf = Buffer.from(await (await fetch(c.preview, { headers: { 'User-Agent': UA } })).arrayBuffer());
+      tiles.push({ label: `${slug}#${i}`, buf });
+    }
+  }
+  await writeFile(STATE, JSON.stringify(state, null, 2));
+
+  const rows = Math.ceil(tiles.length / COLS);
+  const composites = [];
+  for (const [i, t] of tiles.entries()) {
+    const x = (i % COLS) * CW;
+    const y = Math.floor(i / COLS) * CH;
+    composites.push({ input: await sharp(t.buf).resize(CW, CH, { fit: 'cover' }).toBuffer(), left: x, top: y });
+    const label = Buffer.from(
+      `<svg width="${CW}" height="26"><rect width="${CW}" height="26" fill="rgba(0,0,0,.72)"/>` +
+      `<text x="6" y="18" font-family="sans-serif" font-size="15" fill="#fff">${t.label}</text></svg>`,
+    );
+    composites.push({ input: label, left: x, top: y });
+  }
+
+  await sharp({ create: { width: COLS * CW, height: rows * CH, channels: 3, background: '#222' } })
+    .composite(composites)
+    .jpeg({ quality: 82 })
+    .toFile(path.join(REVIEW_DIR, 'sheet.jpg'));
+
+  console.log(`✓ ${REVIEW_DIR}/sheet.jpg — ${tiles.length} ứng viên của ${pairs.length} slug`);
+  for (const [slug, list] of Object.entries(state)) {
+    console.log(`  ${slug}: ${list.map((c, i) => `#${i} ${c.license}`).join('  ')}`);
+  }
 } else if (mode === 'pick') {
   const [group, slug, idxRaw] = rest;
-  const list = JSON.parse(await readFile(STATE, 'utf8'));
+  const saved = JSON.parse(await readFile(STATE, 'utf8'));
+  const list = Array.isArray(saved) ? saved : (saved[slug] ?? []);
   const c = list[Number(idxRaw)];
   if (!c) { console.error(`Không có ứng viên số ${idxRaw}`); process.exit(1); }
-  const dir = path.join('public/images/_src', group);
+  const dir = path.join('assets-src/images', group);
   await mkdir(dir, { recursive: true });
   const dest = path.join(dir, `${slug}.jpg`);
   await dl(c.big, dest);
@@ -95,8 +147,8 @@ if (mode === 'review') {
     'public/images/CREDITS.md',
     `| \`${group}/${slug}\` | [${c.title}](${c.page}) | ${c.author} | ${c.license} | ${c.width}×${c.height} |\n`,
   );
-  console.log(`✓ _src/${group}/${slug}.jpg  ${c.license}  ${c.author.slice(0, 45)}`);
+  console.log(`✓ assets-src/images/${group}/${slug}.jpg  ${c.license}  ${c.author.slice(0, 45)}`);
 } else {
-  console.error('mode phải là "review" hoặc "pick"');
+  console.error('mode phải là "review", "multi" hoặc "pick"');
   process.exit(1);
 }
