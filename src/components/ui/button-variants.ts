@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 
-/** Dùng cho <button> qua <Button>; với <a> thì gán trực tiếp vào className. */
+/** Gán thẳng vào className của <a> hoặc <button> — trang không có component <Button> riêng. */
 export const buttonVariants = cva(
   // min-h-11 = 44px: chuẩn vùng chạm của Apple HIG
   'inline-flex min-h-11 items-center justify-center gap-2 rounded-md text-body font-semibold ' +

@@ -1,11 +1,11 @@
 /**
  * Quét a11y bằng axe-core trên cả hai bản ngôn ngữ, ở mobile và desktop.
- * Chạy: npm run a11y   (mặc định http://localhost:4173)
+ * Chạy: npm run serve rồi npm run a11y   (mặc định http://localhost:4180)
  */
 import AxeBuilder from '@axe-core/playwright';
 import { chromium } from 'playwright';
 
-const BASE = process.argv[2] ?? 'http://localhost:4173';
+const BASE = process.argv[2] ?? 'http://localhost:4180';
 const CASES = [
   { label: 'EN · 375px', path: '/', width: 375, height: 667 },
   { label: 'EN · 1280px', path: '/', width: 1280, height: 900 },

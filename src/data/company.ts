@@ -1,7 +1,7 @@
 /** Hằng số KHÔNG dịch: số điện thoại, link, đường dẫn ảnh.
  *  Chữ hiển thị nằm ở src/content/{en,vi}.ts. */
 
-// TODO: thay bằng thông tin thật của công ty.
+// Thông tin mẫu — xem checklist ở README §7. Đổi siteUrl trước khi deploy.
 export const company = {
   name: 'Vietnam Travel Co.',
   /** Số giấy phép lữ hành — hiển thị ở section About để tạo niềm tin */

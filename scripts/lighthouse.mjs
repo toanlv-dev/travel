@@ -1,12 +1,13 @@
 /**
  * Lighthouse mobile cho cả hai bản ngôn ngữ, đối chiếu ngân sách ở DESIGN_SYSTEM §9.
- * Chạy: npm run lh   (mặc định http://localhost:4173)
+ * Chạy: npm run serve rồi npm run lh   (mặc định http://localhost:4180)
+ * Đo bằng vite preview sẽ sai: preview không nén, JS về 364KB thay vì 113KB.
  */
 import { launch } from 'chrome-launcher';
 import lighthouse from 'lighthouse';
 import { writeFile } from 'node:fs/promises';
 
-const BASE = process.argv[2] ?? 'http://localhost:4173';
+const BASE = process.argv[2] ?? 'http://localhost:4180';
 // Lighthouse dao động mạnh giữa các lần chạy → lấy TRUNG VỊ, đừng tin một lần đo
 const RUNS = Number(process.env.LH_RUNS ?? 3);
 const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];

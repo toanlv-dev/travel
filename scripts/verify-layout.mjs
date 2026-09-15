@@ -1,11 +1,11 @@
 /**
  * Kiểm layout bằng Chrome thật: tràn ngang, vùng chạm, nền section, reduced-motion.
- * Chạy: npm run verify           (mặc định http://localhost:4173)
+ * Chạy: npm run serve rồi npm run verify   (mặc định http://localhost:4180)
  *       npm run verify -- <url>
  */
 import { chromium } from 'playwright';
 
-const BASE = process.argv[2] ?? 'http://localhost:4173';
+const BASE = process.argv[2] ?? 'http://localhost:4180';
 const PAGES = [
   { label: 'EN', path: '/' },
   { label: 'VI', path: '/vi/' },
@@ -158,6 +158,34 @@ for (const { label, path } of PAGES) {
   );
   await page.setViewportSize({ width: 375, height: 667 });
   await page.waitForTimeout(150);
+
+  // Chữ nằm trên ảnh thì PHẢI có nền đặc phía sau. Token màu để dạng hex sẽ khiến Tailwind
+  // bỏ qua lớp có độ mờ (bg-base/95) một cách im lặng — header từng mất sạch nền vì lỗi này.
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.evaluate(() => window.scrollTo({ top: 2000, behavior: 'instant' }));
+  await page.waitForTimeout(400);
+  const onImage = await page.evaluate(() => {
+    const alpha = (c) => {
+      const m = c.match(/rgba?\(([^)]+)\)/);
+      if (!m) return 0;
+      const parts = m[1].split(/[\s,/]+/).filter(Boolean);
+      return parts.length > 3 ? Number(parts[3]) : 1;
+    };
+    const header = document.querySelector('header');
+    const badge = document.querySelector('#tours li span');
+    return {
+      header: alpha(getComputedStyle(header).backgroundColor),
+      badge: badge ? alpha(getComputedStyle(badge).backgroundColor) : null,
+    };
+  });
+  check(onImage.header >= 0.9, `header cuộn xuống có nền đặc (alpha=${onImage.header})`);
+  check(
+    onImage.badge !== null && onImage.badge >= 0.9,
+    `nhãn miền trên ảnh tour có nền đặc (alpha=${onImage.badge})`,
+  );
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.waitForTimeout(200);
 
   // Nền section phải xen kẽ — hai section liền nhau không cùng màu nền
   const bgs = await page.evaluate(() =>

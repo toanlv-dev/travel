@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss';
 
-/** Mọi giá trị map từ src/styles/tokens.css — xem DESIGN_SYSTEM.md */
+/** Mọi giá trị map từ src/styles/tokens.css — xem DESIGN_SYSTEM.md.
+ *  Màu phải bọc `rgb(var(--x) / <alpha-value>)` thì Tailwind mới sinh được lớp có độ mờ
+ *  (`bg-base/95`); đưa thẳng `var(--x)` vào thì lớp đó bị bỏ qua im lặng. */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
@@ -14,26 +16,26 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: 'var(--c-primary-50)',
-          100: 'var(--c-primary-100)',
-          300: 'var(--c-primary-300)',
-          500: 'var(--c-primary-500)',
-          600: 'var(--c-primary-600)',
-          700: 'var(--c-primary-700)',
+          50: 'rgb(var(--c-primary-50) / <alpha-value>)',
+          100: 'rgb(var(--c-primary-100) / <alpha-value>)',
+          300: 'rgb(var(--c-primary-300) / <alpha-value>)',
+          500: 'rgb(var(--c-primary-500) / <alpha-value>)',
+          600: 'rgb(var(--c-primary-600) / <alpha-value>)',
+          700: 'rgb(var(--c-primary-700) / <alpha-value>)',
         },
-        accent: 'var(--c-accent-500)',
+        accent: 'rgb(var(--c-accent-500) / <alpha-value>)',
         ink: {
-          DEFAULT: 'var(--c-ink)',
-          muted: 'var(--c-ink-muted)',
-          faint: 'var(--c-ink-faint)',
+          DEFAULT: 'rgb(var(--c-ink) / <alpha-value>)',
+          muted: 'rgb(var(--c-ink-muted) / <alpha-value>)',
+          faint: 'rgb(var(--c-ink-faint) / <alpha-value>)',
         },
         line: {
-          DEFAULT: 'var(--c-line)',
-          strong: 'var(--c-line-strong)',
+          DEFAULT: 'rgb(var(--c-line) / <alpha-value>)',
+          strong: 'rgb(var(--c-line-strong) / <alpha-value>)',
         },
-        base: 'var(--bg-base)',
-        soft: 'var(--bg-soft)',
-        deep: 'var(--bg-deep)',
+        base: 'rgb(var(--bg-base) / <alpha-value>)',
+        soft: 'rgb(var(--bg-soft) / <alpha-value>)',
+        deep: 'rgb(var(--bg-deep) / <alpha-value>)',
       },
       fontFamily: {
         sans: 'var(--font-sans)',

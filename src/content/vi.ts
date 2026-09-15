@@ -1,6 +1,6 @@
 import type { SiteContent } from './types.ts';
 
-// TODO: thay bằng nội dung thật của công ty (tên, slogan, số liệu).
+// Nội dung mẫu — xem checklist cần khách gửi ở README §7. Sửa file này thì sửa cả en.ts.
 export const content: SiteContent = {
   locale: 'vi',
   seo: {

@@ -1,5 +1,5 @@
 /**
- * Ảnh gốc trong assets-src/images/<nhóm>/ → WebP + JPEG ở các mốc 480/960/1600
+ * Ảnh gốc trong assets-src/images/<nhóm>/ → WebP + JPEG ở các mốc 480/720/960/1600
  * ghi ra public/images/<nhóm>/<slug>-<width>.<ext>.
  * Ảnh gốc để NGOÀI public/ vì Vite copy nguyên public/ vào mỗi bản build.
  *
@@ -13,8 +13,8 @@ const SRC = 'assets-src/images';
 const OUT = 'public/images';
 // Mốc 720: điện thoại thường là ~412px CSS ở DPR 1.75 → cần ~720px, ép lên 960 là thừa ~40% byte
 const WIDTHS = [480, 720, 960, 1600];
-// Card tour hiển thị ~33vw, card điểm đến ~22vw → ngay cả ở DPR 2 cũng không quá 960px.
-// Sinh thêm mốc 1600 chỉ tổ phình repo mà trình duyệt không bao giờ chọn.
+// Card tour ~33vw, card điểm đến ~22vw → ngay cả ở DPR 2 cũng không quá 960px; mốc 1600 chỉ
+// tổ phình repo mà trình duyệt không bao giờ chọn.
 const MAX_WIDTH_BY_GROUP = { tours: 960, destinations: 960 };
 // Ảnh Commons hầu hết là khổ ngang; card cần tỉ lệ cố định nên cắt theo nhóm.
 // 'attention' để sharp tự chọn vùng nhiều chi tiết thay vì cắt giữa một cách máy móc.

@@ -1,5 +1,9 @@
 /* Design tokens — nguồn: tasks/ca_nhat/page_du_lich/DESIGN_SYSTEM.md
-   Không hard-code màu/size trong component; mọi giá trị đi qua đây. */
+   Không hard-code màu/size trong component; mọi giá trị đi qua đây.
+
+   ⚠️ Màu ghi bằng BA SỐ KÊNH "R G B", không phải hex. Tailwind cần dạng này mới sinh được
+   các lớp có độ mờ như `bg-base/95`; để hex thì lớp đó bị bỏ qua **im lặng** — header từng
+   mất hẳn nền vì lý do này. Dùng trong CSS thuần: rgb(var(--c-ink)). */
 
 :root {
   /* ---------- Font ---------- */
@@ -7,25 +11,25 @@
   --font-serif: Lora, Georgia, 'Times New Roman', serif;
 
   /* ---------- Primary: Xanh lá thiên nhiên ---------- */
-  --c-primary-50: #f1f8ee;
-  --c-primary-100: #dcefd3;
-  --c-primary-300: #96cc7c;
-  --c-primary-500: #63ab45; /* chỉ mảng nền / icon lớn — 2.9:1, KHÔNG dùng cho chữ nhỏ */
-  --c-primary-600: #478230; /* nút, link, chữ nhấn — 4.66:1 với trắng (đo bằng axe) */
-  --c-primary-700: #3b6e28; /* hover, chữ trên nền nhạt — 6.6:1 */
-  --c-accent-500: #f2a93b;
+  --c-primary-50: 241 248 238; /* #f1f8ee */
+  --c-primary-100: 220 239 211; /* #dcefd3 */
+  --c-primary-300: 150 204 124; /* #96cc7c */
+  --c-primary-500: 99 171 69; /* #63ab45 — chỉ mảng nền / icon lớn — 2.9:1, KHÔNG dùng cho chữ nhỏ */
+  --c-primary-600: 71 130 48; /* #478230 — nút, link, chữ nhấn — 4.66:1 với trắng (đo bằng axe) */
+  --c-primary-700: 59 110 40; /* #3b6e28 — hover, chữ trên nền nhạt — 6.6:1 */
+  --c-accent-500: 242 169 59; /* #f2a93b */
 
   /* ---------- Trung tính ---------- */
-  --c-ink: #14181f;
-  --c-ink-muted: #525c6b;
-  --c-ink-faint: #68717f; /* 4.66:1 trên nền soft — bản #7b8595 cũ chỉ 3.52:1 */
-  --c-line: #e4e8ec;
-  --c-line-strong: #cbd2da;
+  --c-ink: 20 24 31; /* #14181f */
+  --c-ink-muted: 82 92 107; /* #525c6b */
+  --c-ink-faint: 104 113 127; /* #68717f — 4.66:1 trên nền soft — bản #7b8595 cũ chỉ 3.52:1 */
+  --c-line: 228 232 236; /* #e4e8ec */
+  --c-line-strong: 203 210 218; /* #cbd2da */
 
   /* ---------- Background (4 nền) ---------- */
-  --bg-base: #ffffff;
-  --bg-soft: #f7f9f5;
-  --bg-deep: #12201a;
+  --bg-base: 255 255 255; /* #ffffff */
+  --bg-soft: 247 249 245; /* #f7f9f5 */
+  --bg-deep: 18 32 26; /* #12201a */
   /* Không điểm nào dưới 45% — ảnh sáng như ruộng lúa chín sẽ nuốt mất chữ trắng */
   --overlay-media: linear-gradient(
     180deg,
