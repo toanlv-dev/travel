@@ -129,6 +129,27 @@ for (const { label, path } of PAGES) {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.waitForTimeout(150);
 
+  // Card trong cùng một hàng phải đều chiều cao — nội dung hai ngôn ngữ dài ngắn khác nhau
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.waitForTimeout(200);
+  const rows = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll('#why li')];
+    const byRow = new Map();
+    for (const c of cards) {
+      const r = c.getBoundingClientRect();
+      const key = Math.round(r.top);
+      byRow.set(key, [...(byRow.get(key) ?? []), Math.round(r.height)]);
+    }
+    return [...byRow.values()];
+  });
+  const uneven = rows.filter((hs) => new Set(hs).size > 1);
+  check(
+    rows.length > 0 && uneven.length === 0,
+    `card WhyUs đều chiều cao theo hàng (${rows.length} hàng${uneven.length ? `, lệch: ${JSON.stringify(uneven)}` : ''})`,
+  );
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.waitForTimeout(150);
+
   // Nền section phải xen kẽ — hai section liền nhau không cùng màu nền
   const bgs = await page.evaluate(() =>
     [...document.querySelectorAll('section')].map((s) => getComputedStyle(s).backgroundColor),
@@ -216,6 +237,63 @@ for (const [w, dpr, expect] of [[375, 2, '960'], [375, 1, '480'], [1440, 1, '160
   );
   await c.close();
 }
+
+// CountUp: đếm một lần rồi dừng, cuộn qua lại không đếm lại
+console.log('\n═══ CountUp');
+const c7 = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+const p7 = await c7.newPage();
+await p7.goto(BASE + '/', { waitUntil: 'networkidle' });
+
+const beforeScroll = await p7.evaluate(() => document.querySelector('[data-countup]')?.textContent);
+await p7.locator('[data-countup]').first().scrollIntoViewIfNeeded();
+await p7.waitForTimeout(1800);
+const afterScroll = await p7.evaluate(() => ({
+  text: document.querySelector('[data-countup]')?.textContent,
+  state: document.querySelector('[data-countup]')?.getAttribute('data-countup'),
+}));
+check(beforeScroll === '0', `trước khi cuộn tới: bắt đầu từ 0 (đang "${beforeScroll}")`);
+check(afterScroll.state === 'done', `đếm xong (state=${afterScroll.state}, hiện "${afterScroll.text}")`);
+
+// Cuộn đi rồi quay lại — con số phải giữ nguyên, không đếm lại từ 0
+await p7.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+await p7.waitForTimeout(400);
+await p7.evaluate(() => window.scrollTo(0, 0));
+await p7.waitForTimeout(300);
+await p7.locator('[data-countup]').first().scrollIntoViewIfNeeded();
+await p7.waitForTimeout(300);
+const again = await p7.evaluate(() => document.querySelector('[data-countup]')?.textContent);
+check(again === afterScroll.text, `cuộn lại không đếm lại ("${again}")`);
+
+// Định dạng số phải theo locale: 8,500 ở bản en và 8.500 ở bản vi
+const nums = async (path) => {
+  const pg = await c7.newPage();
+  await pg.goto(BASE + path, { waitUntil: 'networkidle' });
+  await pg.locator('[data-countup]').first().scrollIntoViewIfNeeded();
+  await pg.waitForTimeout(1800);
+  const all = await pg.evaluate(() => [...document.querySelectorAll('[data-countup]')].map((e) => e.textContent));
+  await pg.close();
+  return all;
+};
+const enNums = await nums('/');
+const viNums = await nums('/vi/');
+check(enNums.some((n) => n.includes('8,500')), `bản EN dùng dấu phẩy: ${enNums.join(' · ')}`);
+check(viNums.some((n) => n.includes('8.500')), `bản VI dùng dấu chấm: ${viNums.join(' · ')}`);
+check(viNums.some((n) => n.includes('4,9')), 'bản VI dùng dấu phẩy thập phân (4,9)');
+await c7.close();
+
+// Giảm chuyển động: hiện thẳng số cuối, không đếm
+const c8 = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
+const p8 = await c8.newPage();
+await p8.goto(BASE + '/', { waitUntil: 'networkidle' });
+const reducedNum = await p8.evaluate(() => ({
+  text: document.querySelector('[data-countup]')?.textContent,
+  state: document.querySelector('[data-countup]')?.getAttribute('data-countup'),
+}));
+check(
+  reducedNum.state === 'done' && reducedNum.text !== '0',
+  `reduced-motion: hiện sẵn số cuối "${reducedNum.text}" mà không cần cuộn`,
+);
+await c8.close();
 
 // Drawer mobile: mở/đóng bằng bàn phím, bẫy focus, đóng bằng Esc
 console.log('\n═══ Drawer mobile (bàn phím)');

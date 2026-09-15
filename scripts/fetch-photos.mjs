@@ -40,8 +40,8 @@ async function search(query, portrait) {
         width: ii.width, height: ii.height,
         preview: ii.thumburl,
         // Commons từ chối tạo thumb > ~1280px cho ảnh lớn → lấy bản gốc, sharp lo việc thu nhỏ.
-        // Ảnh gốc quá nặng (> 25MB) thì đành dùng thumb lớn nhất mà Commons chịu tạo.
-        big: (ii.size ?? 0) > 25_000_000 ? ii.thumburl.replace(/\/\d+px-/, '/1280px-') : ii.url,
+        // Chỉ lùi về thumb khi ảnh gốc thật sự khổng lồ; 1280px không đủ cho ảnh hiển thị 2 cột ở DPR 2.
+        big: (ii.size ?? 0) > 80_000_000 ? ii.thumburl.replace(/\/\d+px-/, '/1280px-') : ii.url,
         bytes: ii.size ?? 0,
         license: strip(em.LicenseShortName?.value) || 'unknown',
         author: strip(em.Artist?.value) || '—',

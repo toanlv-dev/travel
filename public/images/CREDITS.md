@@ -10,3 +10,4 @@ Mọi ảnh **tải về** thư mục này, không hotlink CDN ngoài.
 | File | Nguồn | Tác giả | License | Ghi chú |
 |------|-------|---------|---------|---------|
 | `hero/sapa-terraces` | [Terraced fields Sa Pa 2.jpg](https://commons.wikimedia.org/wiki/File:Terraced_fields_Sa_Pa_2.jpg) | Pedro Alonso | CC BY 2.0 | 4288×2848 |
+| `about/hoi-an-lanterns` | [Hoi An Streets (39543407931).jpg](https://commons.wikimedia.org/wiki/File:Hoi_An_Streets_(39543407931).jpg) | dronepicr | CC BY 2.0 | 6000×4000 |

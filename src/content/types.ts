@@ -29,6 +29,32 @@ export interface HeroContent {
   imageAlt: string;
 }
 
+export interface StatItem {
+  value: number;
+  /** 1 cho điểm đánh giá (4,9); bỏ trống cho số nguyên */
+  decimals?: number;
+  suffix?: string;
+  label: string;
+}
+
+export interface AboutContent {
+  overline: string;
+  heading: string;
+  /** Mỗi phần tử là một đoạn văn */
+  body: string[];
+  licenseLabel: string;
+  imageAlt: string;
+}
+
+/** Tên icon lucide — không phải chữ dịch, nhưng để cạnh nội dung cho khỏi lệch thứ tự */
+export type WhyIcon = 'map' | 'wallet' | 'clock' | 'users' | 'headset' | 'shield';
+
+export interface WhyItem {
+  icon: WhyIcon;
+  title: string;
+  description: string;
+}
+
 export interface MobileBarContent {
   call: string;
   zalo: string;
@@ -43,7 +69,6 @@ export interface SiteContent {
   langSwitch: {
     /** aria-label cho link sang ngôn ngữ kia */
     toOther: string;
-    /** Nhãn hiển thị: 'EN' / 'VI' */
     labelEn: string;
     labelVi: string;
   };
@@ -56,6 +81,16 @@ export interface SiteContent {
     skipToContent: string;
   };
   hero: HeroContent;
+  /** Tiêu đề ẩn cho dải số — screen reader cần biết vùng này là gì */
+  statsHeading: string;
+  stats: StatItem[];
+  about: AboutContent;
+  whyUs: {
+    overline: string;
+    heading: string;
+    description: string;
+    items: WhyItem[];
+  };
   /** Thanh liên hệ dính đáy, chỉ hiện dưới breakpoint md */
   mobileBar: MobileBarContent;
 }
