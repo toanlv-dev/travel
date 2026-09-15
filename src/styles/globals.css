@@ -1,0 +1,76 @@
+/* Font self-host — chỉ subset latin + vietnamese, 3 weight (400/600/700).
+   Bản tiếng Anh vẫn cần vietnamese để in đúng "Đà Nẵng", "Hạ Long".
+   Bỏ weight 500 để giữ ngân sách: mỗi weight tốn ~33KB cho cả hai subset. */
+@import '@fontsource/be-vietnam-pro/latin-400.css';
+@import '@fontsource/be-vietnam-pro/latin-600.css';
+@import '@fontsource/be-vietnam-pro/latin-700.css';
+@import '@fontsource/be-vietnam-pro/vietnamese-400.css';
+@import '@fontsource/be-vietnam-pro/vietnamese-600.css';
+@import '@fontsource/be-vietnam-pro/vietnamese-700.css';
+/* Lora: file này khai báo mọi subset nhưng unicode-range khiến browser chỉ tải
+   latin + vietnamese italic (~49KB). Các subset cyrillic/math/symbols không được tải. */
+@import '@fontsource-variable/lora/wght-italic.css';
+
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* header dính đỉnh không được che tiêu đề khi click anchor */
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-base font-sans text-body text-ink;
+    /* letter-spacing = 0 và không bao giờ âm: chữ có dấu sẽ chồng lấn */
+    letter-spacing: 0;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-primary-600);
+    outline-offset: 2px;
+  }
+
+  /* iOS tự zoom khi focus input có font-size < 16px */
+  input, select, textarea {
+    font-size: 1rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-container px-4 md:px-6 xl:px-8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

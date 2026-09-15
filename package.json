@@ -1,0 +1,49 @@
+{
+  "name": "page-du-lich",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:vi": "cross-env VITE_LOCALE=vi vite",
+    "typecheck": "tsc -b",
+    "build:en": "cross-env VITE_LOCALE=en vite build",
+    "build:vi": "cross-env VITE_LOCALE=vi vite build",
+    "build": "npm run typecheck && npm run build:en && npm run build:vi",
+    "preview": "vite preview",
+    "lint": "oxlint",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "images": "node scripts/optimize-images.mjs",
+    "verify": "node scripts/verify-layout.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/lora": "^5.3.0",
+    "@fontsource/be-vietnam-pro": "^5.3.0",
+    "@radix-ui/react-dialog": "^1.1.23",
+    "@radix-ui/react-tabs": "^1.1.21",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
+    "lucide-react": "^1.46.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "autoprefixer": "^10.6.0",
+    "cross-env": "^10.1.0",
+    "oxlint": "^1.81.0",
+    "playwright": "^1.63.0",
+    "postcss": "^8.5.28",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}
