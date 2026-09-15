@@ -1,0 +1,63 @@
+import { useState } from 'react';
+import { cn } from '@/lib/cn';
+import type { AspectRatio, ImageRef } from '@/types';
+
+interface SmartImageProps {
+  image: ImageRef;
+  alt: string;
+  ratio: AspectRatio;
+  /** Kích thước hiển thị theo breakpoint, để trình duyệt chọn đúng file */
+  sizes?: string;
+  /** Chỉ đặt cho ảnh hero — ảnh còn lại phải lazy */
+  priority?: boolean;
+  className?: string;
+  imgClassName?: string;
+}
+
+// BASE_URL là '/' ở bản tiếng Anh và '/vi/' ở bản tiếng Việt
+const url = (name: string, w: number, ext: 'webp' | 'jpg') =>
+  `${import.meta.env.BASE_URL}images/${name}-${w}.${ext}`;
+
+const srcSet = (image: ImageRef, ext: 'webp' | 'jpg') =>
+  image.widths.map((w) => `${url(image.name, w, ext)} ${w}w`).join(', ');
+
+export function SmartImage({
+  image,
+  alt,
+  ratio,
+  sizes = '100vw',
+  priority = false,
+  className,
+  imgClassName,
+}: SmartImageProps) {
+  const [loaded, setLoaded] = useState(false);
+  // Mốc lớn nhất làm src dự phòng cho trình duyệt không hiểu srcset
+  const fallbackWidth = image.widths[image.widths.length - 1];
+
+  return (
+    <div
+      className={cn('relative overflow-hidden bg-soft', className)}
+      style={{ aspectRatio: ratio }}
+    >
+      <picture>
+        <source type="image/webp" srcSet={srcSet(image, 'webp')} sizes={sizes} />
+        <img
+          src={url(image.name, fallbackWidth, 'jpg')}
+          srcSet={srcSet(image, 'jpg')}
+          sizes={sizes}
+          alt={alt}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding={priority ? 'sync' : 'async'}
+          fetchPriority={priority ? 'high' : 'auto'}
+          onLoad={() => setLoaded(true)}
+          className={cn(
+            'absolute inset-0 h-full w-full object-cover',
+            'transition-opacity duration-toggle ease-out',
+            loaded ? 'opacity-100' : 'opacity-0',
+            imgClassName,
+          )}
+        />
+      </picture>
+    </div>
+  );
+}
