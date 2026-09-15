@@ -26,11 +26,12 @@
   --bg-base: #ffffff;
   --bg-soft: #f7f9f5;
   --bg-deep: #12201a;
+  /* Không điểm nào dưới 45% — ảnh sáng như ruộng lúa chín sẽ nuốt mất chữ trắng */
   --overlay-media: linear-gradient(
     180deg,
-    rgba(10, 20, 16, 0.55) 0%,
-    rgba(10, 20, 16, 0.25) 45%,
-    rgba(10, 20, 16, 0.7) 100%
+    rgba(10, 20, 16, 0.62) 0%,
+    rgba(10, 20, 16, 0.46) 45%,
+    rgba(10, 20, 16, 0.76) 100%
   );
 
   /* ---------- Bo góc ---------- */

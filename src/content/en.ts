@@ -22,6 +22,7 @@ export const content: SiteContent = {
     labelVi: 'VI',
   },
   header: {
+    navLabel: 'Main navigation',
     callCta: 'Free consultation',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
@@ -36,6 +37,11 @@ export const content: SiteContent = {
     ctaPrimary: 'Call for free advice',
     ctaSecondary: 'Browse our tours',
     trustLine: '12 years · 8,500+ travellers · 4.9/5 average rating',
-    imageAlt: 'Terraced rice fields in northern Vietnam at sunrise',
+    imageAlt: 'Golden terraced rice fields on the hillsides of Sa Pa, northern Vietnam',
+  },
+  mobileBar: {
+    call: 'Call now',
+    zalo: 'Zalo',
+    messenger: 'Message',
   },
 };

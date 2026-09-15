@@ -5,7 +5,10 @@ import type { AspectRatio, ImageRef } from '@/types';
 interface SmartImageProps {
   image: ImageRef;
   alt: string;
-  ratio: AspectRatio;
+  /** Bỏ qua khi dùng `fill` */
+  ratio?: AspectRatio;
+  /** Phủ kín phần tử cha (cha phải có `position: relative`) — dùng cho ảnh nền hero */
+  fill?: boolean;
   /** Kích thước hiển thị theo breakpoint, để trình duyệt chọn đúng file */
   sizes?: string;
   /** Chỉ đặt cho ảnh hero — ảnh còn lại phải lazy */
@@ -25,6 +28,7 @@ export function SmartImage({
   image,
   alt,
   ratio,
+  fill = false,
   sizes = '100vw',
   priority = false,
   className,
@@ -36,8 +40,12 @@ export function SmartImage({
 
   return (
     <div
-      className={cn('relative overflow-hidden bg-soft', className)}
-      style={{ aspectRatio: ratio }}
+      className={cn(
+        'overflow-hidden bg-soft',
+        fill ? 'absolute inset-0' : 'relative',
+        className,
+      )}
+      style={fill ? undefined : { aspectRatio: ratio }}
     >
       <picture>
         <source type="image/webp" srcSet={srcSet(image, 'webp')} sizes={sizes} />

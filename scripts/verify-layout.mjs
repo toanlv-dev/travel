@@ -50,19 +50,93 @@ for (const { label, path } of PAGES) {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.waitForTimeout(120);
   const smallTargets = await page.evaluate(() =>
-    [...document.querySelectorAll('a, button, [role="button"]')]
+    // sr-only chỉ bung ra khi focus — kiểm riêng ở dưới
+    [...document.querySelectorAll('a:not(.sr-only), button:not(.sr-only), [role="button"]')]
       .map((el) => ({ t: el.tagName, txt: el.textContent?.trim().slice(0, 24), r: el.getBoundingClientRect() }))
       .filter((x) => x.r.width > 0 && (x.r.height < 44 || x.r.width < 44))
       .map((x) => `<${x.t}> "${x.txt}" ${Math.round(x.r.width)}×${Math.round(x.r.height)}`),
   );
   check(smallTargets.length === 0, `vùng chạm ≥ 44px (${smallTargets.length} vi phạm) ${smallTargets.join(' | ')}`);
 
+  // Skip link: ẩn lúc bình thường, nhưng khi focus phải hiện và đủ lớn để bấm
+  const skip = await page.evaluate(() => {
+    const el = document.querySelector('a.sr-only');
+    if (!el) return null;
+    el.focus();
+    const r = el.getBoundingClientRect();
+    return { w: r.width, h: r.height, visible: getComputedStyle(el).position === 'fixed' };
+  });
+  check(
+    skip !== null && skip.h >= 44 && skip.w >= 44,
+    `skip link khi focus: hiện và đủ lớn (${Math.round(skip?.w ?? 0)}×${Math.round(skip?.h ?? 0)})`,
+  );
+
+  // Hero phải cao đúng 1 màn hình và không bị thanh địa chỉ cắt
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.waitForTimeout(150);
+  const hero = await page.evaluate(() => {
+    const el = document.querySelector('#hero');
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    const h1 = el.querySelector('h1')?.getBoundingClientRect();
+    const cta = el.querySelector('a[href^="tel:"]')?.getBoundingClientRect();
+    return { h: r.height, vh: window.innerHeight, h1Bottom: h1?.bottom, ctaBottom: cta?.bottom };
+  });
+  check(hero !== null, 'có section #hero');
+  check(
+    hero !== null && Math.abs(hero.h - hero.vh) < 2,
+    `hero cao đúng 1 màn hình (${Math.round(hero?.h ?? 0)}px / viewport ${hero?.vh}px)`,
+  );
+  check(
+    hero !== null && (hero.ctaBottom ?? 1e9) <= hero.vh,
+    `CTA hero nằm trong màn hình đầu (đáy CTA ${Math.round(hero?.ctaBottom ?? 0)}px)`,
+  );
+
+  // Anchor scroll không được để header che mất tiêu đề
+  const firstAnchor = await page.evaluate(() => document.querySelector('nav a[href^="#"]')?.getAttribute('href'));
+  if (firstAnchor) {
+    await page.evaluate((h) => { window.location.hash = h; }, firstAnchor);
+    await page.waitForTimeout(500);
+    const hidden = await page.evaluate((h) => {
+      const sec = document.querySelector(h);
+      const heading = sec?.querySelector('h2');
+      if (!heading) return null;
+      const hd = document.querySelector('header')?.getBoundingClientRect().height ?? 0;
+      return { top: heading.getBoundingClientRect().top, headerH: hd };
+    }, firstAnchor);
+    check(
+      hidden !== null && hidden.top >= hidden.headerH - 1,
+      `anchor ${firstAnchor}: tiêu đề không bị header che (top=${Math.round(hidden?.top ?? 0)}, header=${Math.round(hidden?.headerH ?? 0)})`,
+    );
+    await page.evaluate(() => { window.location.hash = ''; window.scrollTo(0, 0); });
+    await page.waitForTimeout(200);
+  }
+
+  // Thanh gọi nhanh: hiện ở mobile, ẩn từ md
+  const barSel = 'div.fixed.inset-x-0.bottom-0';
+  const bar375 = await page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    return el ? getComputedStyle(el).display : 'không thấy';
+  }, barSel);
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.waitForTimeout(150);
+  const bar1024 = await page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    return el ? getComputedStyle(el).display : 'không thấy';
+  }, barSel);
+  check(bar375 !== 'none' && bar375 !== 'không thấy', `thanh gọi nhanh hiện ở 375px (display=${bar375})`);
+  check(bar1024 === 'none', `thanh gọi nhanh ẩn ở 1024px (display=${bar1024})`);
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.waitForTimeout(150);
+
   // Nền section phải xen kẽ — hai section liền nhau không cùng màu nền
   const bgs = await page.evaluate(() =>
     [...document.querySelectorAll('section')].map((s) => getComputedStyle(s).backgroundColor),
   );
-  const alternating = bgs.every((bg, i) => i === 0 || bg !== bgs[i - 1]);
-  check(alternating && bgs.length >= 3, `nền xen kẽ (${bgs.length} section: ${bgs.join(' → ')})`);
+  // #hero trong suốt (ảnh nền) nên bỏ qua khi so nền xen kẽ
+  const solid = bgs.filter((b) => b !== 'rgba(0, 0, 0, 0)');
+  const alternating = solid.every((bg, i) => i === 0 || bg !== solid[i - 1]);
+  check(alternating && solid.length >= 3, `nền xen kẽ (${solid.length} section đặc)`);
 
   await ctx.close();
 }
@@ -77,7 +151,7 @@ const page = await ctx.newPage();
 await page.goto(BASE + '/', { waitUntil: 'networkidle' });
 await page.waitForTimeout(300);
 const reveal = await page.evaluate(() => {
-  const el = document.querySelector('#s-soft article')?.parentElement;
+  const el = document.querySelector('[data-reveal]');
   if (!el) return null;
   const cs = getComputedStyle(el);
   return { opacity: cs.opacity, transform: cs.transform };
@@ -99,10 +173,10 @@ const ctx2 = await browser.newContext({
 });
 const p2 = await ctx2.newPage();
 await p2.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
-const sel = '#s-soft article';
+const sel = '[data-reveal]';
 await p2.waitForSelector(sel);
 const before = await p2.evaluate((s) => {
-  const el = document.querySelector(s)?.parentElement;
+  const el = document.querySelector(s);
   return el ? getComputedStyle(el).opacity : null;
 }, sel);
 check(before !== null && Number(before) < 1, `trước khi cuộn tới: Reveal đang ẩn (opacity=${before})`);
@@ -110,7 +184,7 @@ check(before !== null && Number(before) < 1, `trước khi cuộn tới: Reveal 
 await p2.locator(sel).first().scrollIntoViewIfNeeded();
 await p2.waitForTimeout(700);
 const after = await p2.evaluate((s) => {
-  const el = document.querySelector(s)?.parentElement;
+  const el = document.querySelector(s);
   return el ? getComputedStyle(el).opacity : null;
 }, sel);
 check(after === '1', `sau khi cuộn tới: Reveal đã hiện (opacity=${after})`);
@@ -120,7 +194,8 @@ await ctx2.close();
 console.log('\n═══ SmartImage — định dạng & mốc srcset');
 // iPhone 8 là DPR 2: 375px CSS ở 1 cột cần ~750 device px → phải chọn mốc 960w, không phải 480w.
 // Nếu chỉ test DPR 1 thì mốc nào cũng ra 480w và test không chứng minh được gì.
-for (const [w, dpr, expect] of [[375, 2, '960'], [375, 1, '480'], [1440, 1, '480']]) {
+// Hero phủ 100vw nên mốc chọn theo chính bề rộng viewport × DPR
+for (const [w, dpr, expect] of [[375, 2, '960'], [375, 1, '480'], [1440, 1, '1600']]) {
   const c = await browser.newContext({ viewport: { width: w, height: 900 }, deviceScaleFactor: dpr });
   const pg = await c.newPage();
   const imgReqs = [];
@@ -130,7 +205,7 @@ for (const [w, dpr, expect] of [[375, 2, '960'], [375, 1, '480'], [1440, 1, '480
   await pg.goto(BASE + '/', { waitUntil: 'networkidle' });
   await pg.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await pg.waitForTimeout(900);
-  const picked = imgReqs.filter((u) => u.startsWith('test-landscape'));
+  const picked = imgReqs.filter((u) => u.startsWith('sapa-terraces'));
   check(
     picked.length > 0 && picked.every((u) => u.endsWith('.webp')),
     `${w}px @${dpr}x — chỉ tải WebP, không tải JPEG (${[...new Set(picked)].join(', ') || 'không có ảnh nào'})`,
@@ -141,6 +216,76 @@ for (const [w, dpr, expect] of [[375, 2, '960'], [375, 1, '480'], [1440, 1, '480
   );
   await c.close();
 }
+
+// Drawer mobile: mở/đóng bằng bàn phím, bẫy focus, đóng bằng Esc
+console.log('\n═══ Drawer mobile (bàn phím)');
+const c4 = await browser.newContext({ viewport: { width: 375, height: 667 } });
+const p4 = await c4.newPage();
+await p4.goto(BASE + '/', { waitUntil: 'networkidle' });
+
+const trigger = p4.locator('header button[aria-label]').first();
+await trigger.press('Enter');
+await p4.waitForTimeout(350);
+const opened = await p4.locator('[role="dialog"]').isVisible();
+check(opened, 'mở drawer bằng phím Enter');
+
+const focusInside = await p4.evaluate(() => {
+  const dlg = document.querySelector('[role="dialog"]');
+  return !!dlg && dlg.contains(document.activeElement);
+});
+check(focusInside, 'focus được đưa vào trong drawer');
+
+// Tab vòng quanh phải không thoát ra ngoài drawer
+let escaped = false;
+for (let i = 0; i < 14; i++) {
+  await p4.keyboard.press('Tab');
+  const inside = await p4.evaluate(() => {
+    const dlg = document.querySelector('[role="dialog"]');
+    return !!dlg && dlg.contains(document.activeElement);
+  });
+  if (!inside) { escaped = true; break; }
+}
+check(!escaped, 'bẫy focus: Tab 14 lần không thoát khỏi drawer');
+
+await p4.keyboard.press('Escape');
+await p4.waitForTimeout(350);
+check(!(await p4.locator('[role="dialog"]').isVisible()), 'đóng drawer bằng Escape');
+
+const restored = await p4.evaluate(() => document.activeElement?.tagName === 'BUTTON');
+check(restored, 'focus trả về nút mở menu sau khi đóng');
+await c4.close();
+
+// Đổi ngôn ngữ phải giữ nguyên vị trí đang đứng
+console.log('\n═══ LangSwitcher giữ anchor');
+const c5 = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+const p5 = await c5.newPage();
+await p5.goto(BASE + '/#about', { waitUntil: 'networkidle' });
+await p5.waitForTimeout(400);
+await p5.locator('header a[hreflang="vi"]').first().click();
+await p5.waitForLoadState('networkidle');
+const urlAfter = new URL(p5.url());
+check(
+  urlAfter.pathname === '/vi/' && urlAfter.hash === '#about',
+  `/#about → ${urlAfter.pathname}${urlAfter.hash} (mong đợi /vi/#about)`,
+);
+check((await p5.getAttribute('html', 'lang')) === 'vi', 'trang đích là bản tiếng Việt');
+await c5.close();
+
+// Header bản tiếng Việt (chữ dài hơn 15–25%) không được tràn hàng ở 1024px
+console.log('\n═══ Header tiếng Việt ở 1024px');
+const c6 = await browser.newContext({ viewport: { width: 1024, height: 800 } });
+const p6 = await c6.newPage();
+await p6.goto(BASE + '/vi/', { waitUntil: 'networkidle' });
+const navWrap = await p6.evaluate(() => {
+  const links = [...document.querySelectorAll('header nav a')];
+  if (!links.length) return null;
+  const tops = new Set(links.map((a) => Math.round(a.getBoundingClientRect().top)));
+  const header = document.querySelector('header').getBoundingClientRect();
+  return { rows: tops.size, headerH: header.height, count: links.length };
+});
+check(navWrap?.rows === 1, `menu ${navWrap?.count} mục nằm trên 1 hàng (đang ${navWrap?.rows} hàng)`);
+check((navWrap?.headerH ?? 0) <= 88, `header không bị đội cao (${Math.round(navWrap?.headerH ?? 0)}px)`);
+await c6.close();
 
 // CLS: SmartImage khoá aspect-ratio nên ảnh tải xong không được làm nhảy layout
 console.log('\n═══ CLS (ngân sách ≤ 0.05)');

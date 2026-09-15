@@ -22,6 +22,7 @@ export const content: SiteContent = {
     labelVi: 'VI',
   },
   header: {
+    navLabel: 'Điều hướng chính',
     callCta: 'Tư vấn miễn phí',
     openMenu: 'Mở menu',
     closeMenu: 'Đóng menu',
@@ -36,6 +37,11 @@ export const content: SiteContent = {
     ctaPrimary: 'Gọi tư vấn miễn phí',
     ctaSecondary: 'Xem tour trong nước',
     trustLine: '12 năm · hơn 8.500 lượt khách · đánh giá 4,9/5',
-    imageAlt: 'Ruộng bậc thang miền Bắc Việt Nam lúc bình minh',
+    imageAlt: 'Ruộng bậc thang lúa chín vàng trên sườn đồi Sa Pa',
+  },
+  mobileBar: {
+    call: 'Gọi ngay',
+    zalo: 'Zalo',
+    messenger: 'Nhắn tin',
   },
 };

@@ -29,6 +29,12 @@ export interface HeroContent {
   imageAlt: string;
 }
 
+export interface MobileBarContent {
+  call: string;
+  zalo: string;
+  messenger: string;
+}
+
 export interface SiteContent {
   locale: Locale;
   seo: SeoMeta;
@@ -42,10 +48,14 @@ export interface SiteContent {
     labelVi: string;
   };
   header: {
+    /** aria-label cho <nav>, vì có 2 nav (desktop + drawer) */
+    navLabel: string;
     callCta: string;
     openMenu: string;
     closeMenu: string;
     skipToContent: string;
   };
   hero: HeroContent;
+  /** Thanh liên hệ dính đáy, chỉ hiện dưới breakpoint md */
+  mobileBar: MobileBarContent;
 }

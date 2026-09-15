@@ -1,64 +1,43 @@
 import { content } from '@content';
+import { MobileCallBar } from '@/components/common/MobileCallBar';
 import { Reveal } from '@/components/common/Reveal';
-import { SmartImage } from '@/components/common/SmartImage';
 import { Section } from '@/components/layout/Section';
 import { SectionHeading } from '@/components/layout/SectionHeading';
-import { Button } from '@/components/ui/button';
-import { buttonVariants } from '@/components/ui/button-variants';
-import type { ImageRef } from '@/types';
-
-/** Trang tạm để kiểm bộ component nền. */
-const demoImage: ImageRef = { name: 'demo/test-landscape', widths: [480, 960, 1600] };
+import { Header } from '@/sections/Header';
+import { Hero } from '@/sections/Hero';
 
 export default function App() {
   return (
-    <main id="main">
-      <Section id="s-base" bg="base" labelledBy="h-base">
-        <SectionHeading
-          id="h-base"
-          overline={content.hero.overline}
-          title={content.hero.heading}
-          description={content.hero.description}
-        />
-        <p className="mb-6 font-serif text-body-lg italic text-ink-muted">{content.hero.tagline}</p>
-        <div className="flex flex-wrap gap-3">
-          <Button>{content.hero.ctaPrimary}</Button>
-          <a href="#s-soft" className={buttonVariants({ variant: 'outline' })}>
-            {content.hero.ctaSecondary}
-          </a>
-        </div>
-      </Section>
+    <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-base focus:px-4 focus:py-3 focus:text-ink focus:shadow-3"
+      >
+        {content.header.skipToContent}
+      </a>
 
-      <Section id="s-soft" bg="soft" labelledBy="h-soft">
-        <SectionHeading id="h-soft" title="Section nền soft + Reveal + SmartImage" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[0, 1, 2].map((i) => (
-            <Reveal key={i} delay={i * 80}>
-              <article className="overflow-hidden rounded-lg bg-base shadow-1">
-                <SmartImage
-                  image={demoImage}
-                  alt={content.hero.imageAlt}
-                  ratio="4/3"
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                />
-                <div className="p-4">
-                  <h3 className="text-h3 text-ink">Card {i + 1}</h3>
-                  <p className="mt-1 text-small text-ink-muted">{content.hero.trustLine}</p>
-                </div>
-              </article>
+      <Header />
+
+      <main id="main">
+        <Hero />
+
+        {/* Chỗ giữ cho các section sắp làm — đủ để kiểm anchor scroll và nền xen kẽ */}
+        {content.nav.map((item, i) => (
+          <Section
+            key={item.anchor}
+            id={item.anchor}
+            bg={i % 2 === 0 ? 'soft' : 'base'}
+            labelledBy={`h-${item.anchor}`}
+          >
+            <SectionHeading id={`h-${item.anchor}`} title={item.label} />
+            <Reveal>
+              <p className="text-body text-ink-muted">…</p>
             </Reveal>
-          ))}
-        </div>
-      </Section>
+          </Section>
+        ))}
+      </main>
 
-      <Section id="s-deep" bg="deep" size="lg" labelledBy="h-deep">
-        <SectionHeading id="h-deep" onDeep overline="Deep" title="Section nền đậm" align="center" />
-        <div className="flex justify-center">
-          <a href="#s-base" className={buttonVariants({ variant: 'onDeep', size: 'lg' })}>
-            {content.header.callCta}
-          </a>
-        </div>
-      </Section>
-    </main>
+      <MobileCallBar />
+    </>
   );
 }

@@ -9,4 +9,4 @@ Mọi ảnh **tải về** thư mục này, không hotlink CDN ngoài.
 
 | File | Nguồn | Tác giả | License | Ghi chú |
 |------|-------|---------|---------|---------|
-| _(chưa có — điền khi thêm ảnh ở Phase 2)_ | | | | |
+| `hero/sapa-terraces` | [Terraced fields Sa Pa 2.jpg](https://commons.wikimedia.org/wiki/File:Terraced_fields_Sa_Pa_2.jpg) | Pedro Alonso | CC BY 2.0 | 4288×2848 |
