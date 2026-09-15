@@ -293,6 +293,78 @@ export const content: SiteContent = {
       { slug: 'dalat-tour', alt: 'Luống hoa trong vườn ở Đà Lạt', caption: 'Vườn hoa Đà Lạt' },
     ],
   },
+  posts: {
+    overline: 'Cẩm nang',
+    heading: 'Vài điều nên biết trước khi đi',
+    description: 'Ghi chép của hướng dẫn viên — mùa nào đi đâu, mang gì, ăn ở chỗ nào.',
+    placeholderNote: 'Bài mẫu — sẽ thay bằng bài viết của chính công ty.',
+    readMore: 'Đọc bài',
+    items: [
+      {
+        slug: 'sapa-season',
+        category: 'Đi mùa nào',
+        date: '12/03/2026',
+        readingTime: 'đọc 4 phút',
+        title: 'Sa Pa: tháng nào cho cảnh nào',
+        excerpt:
+          'Ruộng bậc thang tháng 5, tháng 9 và tháng 12 là ba cảnh khác hẳn nhau. Chọn tháng theo tấm ảnh mình thật sự muốn.',
+        body: [
+          'Mùa nước đổ từ giữa tháng 5 đến đầu tháng 6. Ruộng ngập nước soi bóng trời, đúng tấm ảnh phần lớn khách hình dung khi đặt tour. Đổi lại hay mưa, đường giữa các bản lầy đất sét.',
+          'Lúa chín rơi vào giữa tháng 9 đến đầu tháng 10 — đồi vàng rực, thời tiết ổn định nhất năm. Đây cũng là lúc đông nhất, phòng ở Tả Van và Lao Chải hết sớm.',
+          'Tháng 12 và tháng 1 lạnh, đêm có khi dưới 5°C, sương có thể phủ cả ngày trong thung lũng. Ít khách, giá mềm, nhưng không chắc có cảnh để ngắm. Mang áo ấm thật, đừng mang áo gió.',
+        ],
+      },
+      {
+        slug: 'cave-packing',
+        category: 'Mang gì',
+        date: '28/02/2026',
+        readingTime: 'đọc 3 phút',
+        title: 'Vào hang Quảng Bình thì mang những gì',
+        excerpt:
+          'Giày thoát nước nhanh, đèn đội đầu kèm pin dự phòng, và đừng mang thứ gì sợ ướt.',
+        body: [
+          'Nền hang gần như chỗ nào cũng ướt, nhiều đoạn lội nước ngang đầu gối. Giày thể thao bít mũi thoát nước nhanh hơn hẳn dép: đá vừa sắc vừa trơn.',
+          'Đèn điện thoại không đủ sáng trong các vòm lớn. Đèn đội đầu để rảnh hai tay, rất cần khi leo thang trong động Thiên Đường và hang Tối.',
+          'Đồ điện tử cho hết vào túi chống nước. Riêng độ ẩm đã đủ làm mờ ống kính, còn đoạn nhảy xuống nước ở hang Tối là một phần của hành trình chứ không phải tai nạn.',
+        ],
+      },
+      {
+        slug: 'eating-well',
+        category: 'Ăn uống',
+        date: '15/01/2026',
+        readingTime: 'đọc 5 phút',
+        title: 'Ăn ngon dọc đường mà không đau bụng',
+        excerpt:
+          'Quán đông khách, đồ nấu ngay trước mặt, và một quy tắc về đá lạnh thật sự đáng nhớ.',
+        body: [
+          'Quán đông thì nguyên liệu quay vòng nhanh, điều đó quan trọng hơn mấy chiếc ghế nhựa trông sạch hay không. Cứ nhìn trưa dân văn phòng quanh đó ăn ở đâu.',
+          'Ưu tiên món nấu tại chỗ trước mặt mình — phở, bánh mì nướng lúc đứng chờ, lẩu. Cẩn thận hơn với gỏi nguội và trái cây gọt sẵn để lâu ngoài quầy.',
+          'Đá ở quán cà phê và nhà hàng là đá công nghiệp, nhìn chung an toàn: loại hình trụ trong suốt có lỗ giữa. Đá nhuyễn đục trong xô không nhãn mới là thứ nên bỏ qua.',
+        ],
+      },
+    ],
+  },
+  contact: {
+    overline: 'Liên hệ',
+    heading: 'Nói cho chúng tôi biết bạn muốn đi đâu',
+    description:
+      'Không có form đặt tour. Gọi hoặc nhắn tin là gặp thẳng người lên lịch trình cho chuyến đi.',
+    hotlineLabel: 'Hotline',
+    emailLabel: 'Email',
+    hoursLabel: 'Giờ làm việc',
+    hours: 'Thứ Hai đến Chủ nhật, 8:00 – 20:00',
+    addressLabel: 'Văn phòng',
+    mapCta: 'Mở trong Google Maps',
+  },
+  footer: {
+    about:
+      'Công ty lữ hành Việt Nam có giấy phép, tổ chức tour trọn gói khắp ba miền đất nước.',
+    linksHeading: 'Nội dung',
+    contactHeading: 'Liên hệ',
+    followHeading: 'Theo dõi',
+    copyright: '© {year} {name} — Bảo lưu mọi quyền.',
+    backToTop: 'Lên đầu trang',
+  },
   mobileBar: {
     call: 'Gọi ngay',
     zalo: 'Zalo',

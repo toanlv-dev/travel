@@ -294,6 +294,78 @@ export const content: SiteContent = {
       { slug: 'dalat-tour', alt: 'Flower beds in a garden in Da Lat', caption: 'Flower gardens, Da Lat' },
     ],
   },
+  posts: {
+    overline: 'Travel notes',
+    heading: 'Things worth knowing before you go',
+    description: 'Practical notes from our guides — seasons, packing, and what to eat where.',
+    placeholderNote: 'Sample articles — to be replaced with the company\u2019s own posts.',
+    readMore: 'Read the note',
+    items: [
+      {
+        slug: 'sapa-season',
+        category: 'When to go',
+        date: '12 March 2026',
+        readingTime: '4 min read',
+        title: 'Sa Pa: which month gives you which view',
+        excerpt:
+          'The terraces look completely different in May, September and December. Pick the month for the photo you actually want.',
+        body: [
+          'Water season runs from mid-May to early June. The terraces are flooded and mirror the sky, which is the shot most people have in mind when they book. It rains often, and the paths between villages turn to clay.',
+          'Ripe rice is mid-September to early October — the hills turn gold and the weather is at its most stable. This is also the busiest period, so rooms in Ta Van and Lao Chai go early.',
+          'December and January are cold, sometimes below 5°C at night, with fog that can sit in the valley all day. Fewer people, lower prices, and no guarantee of a view. Bring a real jacket, not a windbreaker.',
+        ],
+      },
+      {
+        slug: 'cave-packing',
+        category: 'Packing',
+        date: '28 February 2026',
+        readingTime: '3 min read',
+        title: 'What to bring into the caves of Quang Binh',
+        excerpt:
+          'Shoes that drain, a headlamp with a spare battery, and nothing you would mind getting wet.',
+        body: [
+          'Cave floors are wet nearly everywhere and often involve river crossings up to knee height. Trainers with a closed toe that drain quickly beat sandals: rocks are sharp and slippery.',
+          'Your phone torch will not be enough in the larger chambers. A headlamp leaves both hands free, which matters on the ladders inside Paradise Cave and Dark Cave.',
+          'Pack everything electronic in a dry bag. Humidity alone will fog a camera lens, and the drop into the water at Dark Cave is part of the route, not an accident.',
+        ],
+      },
+      {
+        slug: 'eating-well',
+        category: 'Food',
+        date: '15 January 2026',
+        readingTime: '5 min read',
+        title: 'Eating well on the road without getting sick',
+        excerpt:
+          'Busy stalls, food cooked in front of you, and the one rule about ice that actually matters.',
+        body: [
+          'A stall with a queue turns its ingredients over quickly, which matters more than how clean the plastic stools look. Watch where local office workers eat at noon.',
+          'Prefer anything cooked to order in front of you — pho, banh mi grilled while you wait, hotpot. Be more careful with cold salads and pre-cut fruit that has been sitting out.',
+          'Ice in cafes and restaurants is made industrially and is generally safe: it is the clear cylinder with a hole through the middle. Cloudy crushed ice from an unmarked bucket is the one to skip.',
+        ],
+      },
+    ],
+  },
+  contact: {
+    overline: 'Talk to us',
+    heading: 'Tell us where you want to go',
+    description:
+      'No booking form. Call or message us and you will be talking to the person who plans the trip.',
+    hotlineLabel: 'Hotline',
+    emailLabel: 'Email',
+    hoursLabel: 'Opening hours',
+    hours: 'Monday to Sunday, 8:00 to 20:00',
+    addressLabel: 'Office',
+    mapCta: 'Open in Google Maps',
+  },
+  footer: {
+    about:
+      'A licensed Vietnamese tour operator running guided trips across all three regions of the country.',
+    linksHeading: 'Sections',
+    contactHeading: 'Contact',
+    followHeading: 'Follow us',
+    copyright: '© {year} {name} — All rights reserved.',
+    backToTop: 'Back to top',
+  },
   mobileBar: {
     call: 'Call now',
     zalo: 'Zalo',

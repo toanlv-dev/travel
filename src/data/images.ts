@@ -29,4 +29,10 @@ export const images = {
     W_CARD,
   ),
   gallery,
+  /** Bài viết cũng dùng lại ảnh đã tải — nội dung còn là bài mẫu. */
+  posts: {
+    'sapa-season': tours['sapa-trek'],
+    'cave-packing': tours['phongnha-cave'],
+    'eating-well': tours['mekong-tour'],
+  } as Record<string, ImageRef>,
 };

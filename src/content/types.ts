@@ -111,6 +111,18 @@ export interface GalleryItem {
   caption: string;
 }
 
+export interface Post {
+  slug: string;
+  category: string;
+  /** Ngày đã định dạng sẵn theo từng ngôn ngữ */
+  date: string;
+  readingTime: string;
+  title: string;
+  excerpt: string;
+  /** Mỗi phần tử một đoạn, hiện trong hộp đọc bài */
+  body: string[];
+}
+
 export interface MobileBarContent {
   call: string;
   zalo: string;
@@ -199,6 +211,36 @@ export interface SiteContent {
     /** "Ảnh {i}/{n}" — thay {i} và {n} */
     counterLabel: string;
     items: GalleryItem[];
+  };
+  posts: {
+    overline: string;
+    heading: string;
+    description: string;
+    /** Câu ghi rõ đây là bài mẫu, chưa phải nội dung của công ty */
+    placeholderNote: string;
+    readMore: string;
+    items: Post[];
+  };
+  contact: {
+    overline: string;
+    heading: string;
+    description: string;
+    hotlineLabel: string;
+    emailLabel: string;
+    hoursLabel: string;
+    /** Ví dụ "8:00–20:00, thứ Hai–Chủ nhật" — cách viết khác nhau giữa hai ngôn ngữ */
+    hours: string;
+    addressLabel: string;
+    mapCta: string;
+  };
+  footer: {
+    about: string;
+    linksHeading: string;
+    contactHeading: string;
+    followHeading: string;
+    /** "© {year} {name}…" — thay {year} và {name} */
+    copyright: string;
+    backToTop: string;
   };
   /** Thanh liên hệ dính đáy, chỉ hiện dưới breakpoint md */
   mobileBar: MobileBarContent;

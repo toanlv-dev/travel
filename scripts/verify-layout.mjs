@@ -564,6 +564,98 @@ const focusedIdx = await p10.evaluate(() =>
 check(focusedIdx === 2, `focus trả về đúng ô ảnh đang xem (ô thứ ${focusedIdx + 1}, mong đợi 3)`);
 await c10.close();
 
+// Bài viết · dải liên hệ · footer
+console.log('\n═══ Posts / ContactCta / Footer');
+const c11 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+const p11 = await c11.newPage();
+await p11.goto(BASE + '/', { waitUntil: 'networkidle' });
+
+// Khách đã chốt KHÔNG làm form — kiểm toàn trang, không riêng khối liên hệ
+const formish = await p11.evaluate(() =>
+  [...document.querySelectorAll('form, input, textarea, select')].map((e) => e.tagName),
+);
+check(formish.length === 0, `toàn trang không có form/ô nhập (${formish.join(', ') || 'sạch'})`);
+
+await p11.locator('#posts').scrollIntoViewIfNeeded();
+await p11.waitForTimeout(400);
+const posts = await p11.locator('#posts li > button').count();
+check(posts === 3, `3 card bài viết (${posts})`);
+check(
+  /sample|mẫu/i.test(await p11.locator('#posts').innerText()),
+  'có câu ghi rõ đây là bài mẫu',
+);
+
+await p11.locator('#posts li > button').first().click();
+await p11.waitForTimeout(400);
+const article = await p11.locator('[role="dialog"]').innerText();
+check(article.length > 300, `bấm card mở hộp đọc bài (${article.length} ký tự)`);
+await p11.keyboard.press('Escape');
+await p11.waitForTimeout(300);
+check(!(await p11.locator('[role="dialog"]').isVisible()), 'Esc đóng hộp đọc bài');
+
+// Dải liên hệ: hotline bấm gọi được, có Zalo + Messenger + email
+await p11.locator('#contact').scrollIntoViewIfNeeded();
+await p11.waitForTimeout(400);
+const contact = await p11.evaluate(() => {
+  const sec = document.querySelector('#contact');
+  const href = (sel) => sec.querySelector(sel)?.getAttribute('href') ?? '';
+  const tel = sec.querySelector('a[href^="tel:"]');
+  return {
+    tel: href('a[href^="tel:"]'),
+    telSize: tel ? Math.round(parseFloat(getComputedStyle(tel).fontSize)) : 0,
+    zalo: href('a[href*="zalo.me"]'),
+    messenger: href('a[href*="m.me"]'),
+    mail: href('a[href^="mailto:"]'),
+    maps: href('a[href*="google.com/maps"]'),
+    iframes: sec.querySelectorAll('iframe').length,
+  };
+});
+check(/^tel:\d{8,}$/.test(contact.tel), `hotline là link gọi được (${contact.tel})`);
+check(contact.telSize >= 28, `hotline in cỡ lớn (${contact.telSize}px)`);
+check(!!contact.zalo && !!contact.messenger, `có nút Zalo và Messenger (${contact.zalo} · ${contact.messenger})`);
+check(!!contact.mail, `có link email (${contact.mail})`);
+// Đã chốt: KHÔNG nhúng iframe bản đồ, chỉ link ra Google Maps
+check(contact.iframes === 0 && !!contact.maps, `bản đồ là link, không phải iframe (${contact.iframes} iframe)`);
+
+// Mọi link mở tab mới phải có rel="noopener"
+const unsafe = await p11.evaluate(() =>
+  [...document.querySelectorAll('a[target="_blank"]')]
+    .filter((a) => !(a.getAttribute('rel') ?? '').includes('noopener'))
+    .map((a) => a.getAttribute('href')),
+);
+check(unsafe.length === 0, `link mở tab mới đều có rel=noopener (${unsafe.length} thiếu)`);
+
+// Footer
+const footer = await p11.evaluate(() => {
+  const f = document.querySelector('footer');
+  return {
+    exists: !!f,
+    text: f?.innerText ?? '',
+    links: f?.querySelectorAll('a').length ?? 0,
+    top: f?.querySelector('a[href="#main"]') !== null,
+  };
+});
+check(footer.exists && footer.links >= 8, `footer có ${footer.links} liên kết`);
+check(footer.text.includes(String(new Date().getFullYear())), 'bản quyền ghi đúng năm hiện tại');
+check(footer.top, 'footer có link lên đầu trang');
+
+// Cuộn hết trang ở 375px: thanh gọi nhanh dính đáy không được đè lên cuối footer
+await p11.setViewportSize({ width: 375, height: 667 });
+await p11.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
+await p11.waitForTimeout(800);
+await p11.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' }));
+await p11.waitForTimeout(500);
+const covered = await p11.evaluate(() => {
+  const bar = document.querySelector('div.fixed.inset-x-0.bottom-0')?.getBoundingClientRect();
+  const last = document.querySelector('footer a[href="#main"]')?.getBoundingClientRect();
+  return bar && last ? { bar: Math.round(bar.top), last: Math.round(last.bottom) } : null;
+});
+check(
+  covered !== null && covered.last <= covered.bar,
+  `cuối trang: thanh gọi nhanh không che footer (đáy link ${covered?.last}px, thanh ở ${covered?.bar}px)`,
+);
+await c11.close();
+
 // CLS: SmartImage khoá aspect-ratio nên ảnh tải xong không được làm nhảy layout
 console.log('\n═══ CLS (ngân sách ≤ 0.05)');
 const c3 = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2 });

@@ -27,9 +27,18 @@
 
   body {
     @apply bg-base font-sans text-body text-ink;
+    /* Chừa chỗ cho thanh gọi nhanh dính đáy, nếu không nó che mất dòng cuối footer */
+    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
     /* letter-spacing = 0 và không bao giờ âm: chữ có dấu sẽ chồng lấn */
     letter-spacing: 0;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Từ md thanh gọi nhanh đã ẩn */
+  @media (min-width: 768px) {
+    body {
+      padding-bottom: 0;
+    }
   }
 
   h1, h2, h3, h4 {

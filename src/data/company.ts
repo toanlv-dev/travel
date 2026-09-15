@@ -15,3 +15,14 @@ export const company = {
   /** Đổi thành domain thật trước khi deploy — dùng cho canonical + hreflang */
   siteUrl: 'https://example.com',
 } as const;
+
+/** Bản đồ: chỉ link ra Google Maps, KHÔNG nhúng iframe.
+ *  Iframe Maps nặng (~600KB + nhiều request bên thứ ba) mà địa chỉ hiện còn là placeholder. */
+export const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address)}`;
+
+/** Mạng xã hội — bỏ phần tử nào chưa có link thật thay vì để trỏ về '#'. */
+export const socials = [
+  { key: 'facebook', name: 'Facebook', url: 'https://facebook.com/example' },
+  { key: 'youtube', name: 'YouTube', url: 'https://youtube.com/@example' },
+  { key: 'zalo', name: 'Zalo', url: company.zalo },
+] as const;
