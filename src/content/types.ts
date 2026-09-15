@@ -84,6 +84,33 @@ export interface Destination {
   imageAlt: string;
 }
 
+/** Ô logo khách hàng. Chưa có logo thật nên chỉ có chữ — xem src/data/clients.ts. */
+export interface ClientSlot {
+  /** Khớp với id trong src/data/clients.ts */
+  id: string;
+  /** Tên hiển thị trong ô placeholder. KHÔNG được thay bằng tên doanh nghiệp có thật khi chưa xin phép. */
+  name: string;
+}
+
+export interface Testimonial {
+  id: string;
+  /** In bằng Lora italic */
+  quote: string;
+  author: string;
+  /** Chức danh + nơi công tác */
+  role: string;
+  /** 1–5, hiện bằng sao */
+  rating: number;
+}
+
+export interface GalleryItem {
+  /** Khoá trong images.gallery */
+  slug: string;
+  alt: string;
+  /** Chú thích dưới ảnh trong lightbox */
+  caption: string;
+}
+
 export interface MobileBarContent {
   call: string;
   zalo: string;
@@ -140,6 +167,38 @@ export interface SiteContent {
     prevLabel: string;
     nextLabel: string;
     items: Destination[];
+  };
+  clients: {
+    overline: string;
+    heading: string;
+    description: string;
+    /** Câu ghi rõ đây là ô chờ logo thật — hiển thị cho tới khi khách gửi logo */
+    placeholderNote: string;
+    items: ClientSlot[];
+  };
+  testimonials: {
+    overline: string;
+    heading: string;
+    description: string;
+    /** Câu ghi rõ đây là lời chứng thực mẫu, chưa phải của khách thật */
+    placeholderNote: string;
+    prevLabel: string;
+    nextLabel: string;
+    /** aria-label cho dải sao: "{n} trên 5 sao" */
+    ratingLabel: string;
+    items: Testimonial[];
+  };
+  gallery: {
+    overline: string;
+    heading: string;
+    description: string;
+    openLabel: string;
+    closeLabel: string;
+    prevLabel: string;
+    nextLabel: string;
+    /** "Ảnh {i}/{n}" — thay {i} và {n} */
+    counterLabel: string;
+    items: GalleryItem[];
   };
   /** Thanh liên hệ dính đáy, chỉ hiện dưới breakpoint md */
   mobileBar: MobileBarContent;

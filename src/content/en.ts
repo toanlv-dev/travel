@@ -207,6 +207,93 @@ export const content: SiteContent = {
       { slug: 'mekong', name: 'Mekong Delta', region: 'nam', tourCount: '3 tours', imageAlt: 'Produce boats on a Mekong delta waterway' },
     ],
   },
+  clients: {
+    overline: 'Who travels with us',
+    heading: 'Companies that book with us every year',
+    description:
+      'Corporate retreats, incentive trips and family groups — most of our departures come from people who came back.',
+    placeholderNote:
+      'Placeholder — real client logos go here once we receive permission to display them.',
+    items: [
+      { id: 'client-1', name: 'Client logo 1' },
+      { id: 'client-2', name: 'Client logo 2' },
+      { id: 'client-3', name: 'Client logo 3' },
+      { id: 'client-4', name: 'Client logo 4' },
+      { id: 'client-5', name: 'Client logo 5' },
+      { id: 'client-6', name: 'Client logo 6' },
+    ],
+  },
+  testimonials: {
+    overline: 'What travellers say',
+    heading: 'In their own words',
+    description: 'Feedback collected after each departure, published with the traveller\u2019s consent.',
+    placeholderNote: 'Sample text \u2014 to be replaced with real reviews from our travellers.',
+    prevLabel: 'Previous review',
+    nextLabel: 'Next review',
+    ratingLabel: '{n} out of 5 stars',
+    items: [
+      {
+        id: 't1',
+        quote:
+          'The guide changed the route on the second morning because the weather turned, and it ended up being the best day of the trip. That kind of judgement is why we book with a local operator.',
+        author: 'Traveller A',
+        role: 'Placeholder \u2014 name and company pending',
+        rating: 5,
+      },
+      {
+        id: 't2',
+        quote:
+          'We travelled with two grandparents and a four-year-old. Everything was paced for us: shorter walks, earlier meals, a car never more than ten minutes away.',
+        author: 'Traveller B',
+        role: 'Placeholder \u2014 name and company pending',
+        rating: 5,
+      },
+      {
+        id: 't3',
+        quote:
+          'Twenty-two people from our office, three days, no one lost and no one complaining. The itinerary arrived a month early and did not change.',
+        author: 'Traveller C',
+        role: 'Placeholder \u2014 name and company pending',
+        rating: 5,
+      },
+      {
+        id: 't4',
+        quote:
+          'Answered on Zalo within minutes, every time, including the evening before departure when our flight moved.',
+        author: 'Traveller D',
+        role: 'Placeholder \u2014 name and company pending',
+        rating: 4,
+      },
+      {
+        id: 't5',
+        quote:
+          'What I remember is the food stops. None of them were on a tourist street, and the guide knew the owners by name.',
+        author: 'Traveller E',
+        role: 'Placeholder \u2014 name and company pending',
+        rating: 5,
+      },
+    ],
+  },
+  gallery: {
+    overline: 'From our trips',
+    heading: 'Photos from the road',
+    description: 'Tap any photo to see it full size.',
+    openLabel: 'View photo full size',
+    closeLabel: 'Close photo',
+    prevLabel: 'Previous photo',
+    nextLabel: 'Next photo',
+    counterLabel: 'Photo {i} of {n}',
+    items: [
+      { slug: 'sapa-terraces', alt: 'Golden terraced rice fields on the hillsides of Sa Pa', caption: 'Terraced fields above the Muong Hoa valley, Sa Pa' },
+      { slug: 'sapa-trek', alt: 'Footpath between terraced fields near Sa Pa', caption: 'Walking between villages, Lao Cai' },
+      { slug: 'halong-cruise', alt: 'Wooden boat among the limestone islands of Ha Long Bay', caption: 'Overnight boat in Ha Long Bay' },
+      { slug: 'phongnha-cave', alt: 'Lit cave chamber at Phong Nha', caption: 'Inside the caves of Quang Binh' },
+      { slug: 'hoi-an-lanterns', alt: 'Lantern-lit street in the old town of Hoi An', caption: 'Lantern evening in Hoi An old town' },
+      { slug: 'hue-hoian', alt: 'The Japanese covered bridge in Hoi An reflected in the canal', caption: 'The Japanese covered bridge, Hoi An' },
+      { slug: 'mekong-tour', alt: 'Boats loaded with produce at the Cai Rang floating market', caption: 'Cai Rang floating market, Can Tho' },
+      { slug: 'dalat-tour', alt: 'Flower beds in a garden in Da Lat', caption: 'Flower gardens, Da Lat' },
+    ],
+  },
   mobileBar: {
     call: 'Call now',
     zalo: 'Zalo',

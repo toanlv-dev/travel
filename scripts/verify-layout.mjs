@@ -445,6 +445,125 @@ check(navWrap?.rows === 1, `menu ${navWrap?.count} mục nằm trên 1 hàng (đ
 check((navWrap?.headerH ?? 0) <= 88, `header không bị đội cao (${Math.round(navWrap?.headerH ?? 0)}px)`);
 await c6.close();
 
+// Khách hàng · cảm nhận · thư viện ảnh
+console.log('\n═══ Clients / Testimonials / Gallery');
+const c10 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+const p10 = await c10.newPage();
+await p10.goto(BASE + '/', { waitUntil: 'networkidle' });
+await p10.locator('#clients').scrollIntoViewIfNeeded();
+await p10.waitForTimeout(400);
+
+const logos = await p10.evaluate(() => {
+  const els = [...document.querySelectorAll('#clients ul > li')];
+  const tops = new Set(els.map((e) => Math.round(e.getBoundingClientRect().top)));
+  // Logo thật cao thấp khác nhau; cái phải thẳng hàng là cái HỘP chứa nó
+  const boxes = new Set(els.map((e) => Math.round(e.firstElementChild.getBoundingClientRect().height)));
+  return { n: els.length, rows: tops.size, boxes: [...boxes] };
+});
+check(logos.n === 6, `6 ô logo khách hàng (${logos.n})`);
+check(logos.rows === 1, `1280px: 6 ô trên 1 hàng (đang ${logos.rows} hàng)`);
+check(logos.boxes.length === 1, `hộp logo cùng chiều cao (${logos.boxes.join(', ')}px)`);
+
+// Chưa có logo thật → ô phải NHÌN RÕ là chỗ chờ, kèm câu giải thích
+const ph = await p10.evaluate(() => {
+  const boxes = [...document.querySelectorAll('#clients [data-placeholder="client-logo"]')];
+  return {
+    n: boxes.length,
+    dashed: boxes.every((b) => getComputedStyle(b).borderStyle === 'dashed'),
+    text: document.querySelector('#clients').innerText,
+  };
+});
+check(ph.n === 6 && ph.dashed, `ô logo là placeholder viền đứt (${ph.n} ô, dashed=${ph.dashed})`);
+check(/placeholder/i.test(ph.text), 'có câu ghi rõ đang chờ logo thật');
+
+await p10.setViewportSize({ width: 375, height: 667 });
+await p10.waitForTimeout(250);
+const cols375 = await p10.evaluate(() => {
+  const els = [...document.querySelectorAll('#clients ul > li')];
+  const top = Math.round(els[0].getBoundingClientRect().top);
+  return els.filter((e) => Math.round(e.getBoundingClientRect().top) === top).length;
+});
+check(cols375 === 2, `375px: lưới logo 2 cột (đang ${cols375})`);
+await p10.setViewportSize({ width: 1280, height: 900 });
+await p10.waitForTimeout(250);
+
+// Cảm nhận: trích dẫn dài ngắn khác nhau không được làm nhảy chiều cao carousel
+await p10.locator('#testimonials').scrollIntoViewIfNeeded();
+await p10.waitForTimeout(400);
+const railH = () => p10.evaluate(() => Math.round(document.querySelector('#testimonials ul').getBoundingClientRect().height));
+const h0 = await railH();
+await p10.locator('#testimonials button[aria-label]').nth(1).click();
+await p10.waitForTimeout(600);
+await p10.locator('#testimonials button[aria-label]').nth(1).click();
+await p10.waitForTimeout(600);
+const h1 = await railH();
+check(h0 > 0 && h0 === h1, `chuyển cảm nhận không đổi chiều cao (${h0}px → ${h1}px)`);
+
+const stars = await p10.evaluate(() => {
+  const first = document.querySelector('#testimonials li [role="img"]');
+  return { svg: first?.querySelectorAll('svg').length ?? 0, label: first?.getAttribute('aria-label') ?? '' };
+});
+check(stars.svg === 5, `mỗi cảm nhận có 5 sao (${stars.svg})`);
+check(/\d/.test(stars.label), `dải sao có nhãn chữ cho screen reader ("${stars.label}")`);
+check(
+  /sample|mẫu/i.test(await p10.locator('#testimonials').innerText()),
+  'có câu ghi rõ đây là cảm nhận mẫu',
+);
+
+// Thư viện ảnh + lightbox
+await p10.locator('#gallery').scrollIntoViewIfNeeded();
+await p10.waitForTimeout(400);
+const tiles = await p10.locator('#gallery li button').count();
+check(tiles === 8, `thư viện có 8 ảnh (${tiles})`);
+
+await p10.locator('#gallery li button').first().click();
+await p10.waitForTimeout(400);
+check(await p10.locator('[role="dialog"]').isVisible(), 'bấm ảnh mở lightbox');
+
+const locked = await p10.evaluate(() => {
+  const y = window.scrollY;
+  window.scrollBy(0, 400);
+  return { moved: window.scrollY !== y };
+});
+check(!locked.moved, 'mở lightbox thì nền không cuộn được');
+
+const counter = () => p10.evaluate(() => document.querySelector('[role="dialog"] h2, [role="dialog"] [id]')?.innerText ?? '');
+const shot1 = await counter();
+await p10.keyboard.press('ArrowRight');
+await p10.waitForTimeout(250);
+await p10.keyboard.press('ArrowRight');
+await p10.waitForTimeout(250);
+const shot3 = await counter();
+check(shot1 !== shot3 && /3/.test(shot3), `mũi tên chuyển ảnh ("${shot1}" → "${shot3}")`);
+
+// Vòng lại ở hai đầu: ảnh 3 → trái 3 lần → phải về ảnh cuối
+for (let i = 0; i < 3; i++) {
+  await p10.keyboard.press('ArrowLeft');
+  await p10.waitForTimeout(150);
+}
+check(/8\/8|8 of 8/.test(await counter()), `qua khỏi ảnh đầu thì vòng về ảnh cuối ("${await counter()}")`);
+
+// Bấm vào ảnh KHÔNG được đóng, bấm khoảng trống quanh ảnh thì đóng
+await p10.mouse.click(640, 450);
+await p10.waitForTimeout(300);
+check(await p10.locator('[role="dialog"]').isVisible(), 'bấm vào chính tấm ảnh thì không đóng');
+await p10.mouse.click(640, 880);
+await p10.waitForTimeout(400);
+check(!(await p10.locator('[role="dialog"]').isVisible()), 'bấm khoảng trống quanh ảnh thì đóng');
+
+await p10.locator('#gallery li button').nth(2).click();
+await p10.waitForTimeout(400);
+await p10.keyboard.press('Escape');
+await p10.waitForTimeout(400);
+check(!(await p10.locator('[role="dialog"]').isVisible()), 'Esc đóng lightbox');
+
+// Đóng xong phải đứng ở ảnh ĐANG xem, không nhảy về ảnh đã bấm lúc mở
+const focusedIdx = await p10.evaluate(() =>
+  [...document.querySelectorAll('#gallery li button')].indexOf(document.activeElement),
+);
+check(focusedIdx === 2, `focus trả về đúng ô ảnh đang xem (ô thứ ${focusedIdx + 1}, mong đợi 3)`);
+await c10.close();
+
 // CLS: SmartImage khoá aspect-ratio nên ảnh tải xong không được làm nhảy layout
 console.log('\n═══ CLS (ngân sách ≤ 0.05)');
 const c3 = await browser.newContext({ viewport: { width: 375, height: 667 }, deviceScaleFactor: 2 });

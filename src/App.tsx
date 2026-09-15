@@ -5,10 +5,13 @@ import { Section } from '@/components/layout/Section';
 import { SectionHeading } from '@/components/layout/SectionHeading';
 import { About } from '@/sections/About';
 import { Activities } from '@/sections/Activities';
+import { Clients } from '@/sections/Clients';
 import { Destinations } from '@/sections/Destinations';
+import { Gallery } from '@/sections/Gallery';
 import { Header } from '@/sections/Header';
 import { Hero } from '@/sections/Hero';
 import { Stats } from '@/sections/Stats';
+import { Testimonials } from '@/sections/Testimonials';
 import { WhyUs } from '@/sections/WhyUs';
 
 export default function App() {
@@ -30,17 +33,15 @@ export default function App() {
         <Activities />
         <Destinations />
         <WhyUs />
+        <Clients />
+        <Testimonials />
+        <Gallery />
 
         {/* Chỗ giữ cho các section sắp làm — đủ để kiểm anchor scroll và nền xen kẽ */}
         {content.nav
-          .filter((item) => !['about', 'tours', 'destinations'].includes(item.anchor))
-          .map((item, i) => (
-            <Section
-              key={item.anchor}
-              id={item.anchor}
-              bg={i % 2 === 0 ? 'base' : 'soft'}
-              labelledBy={`h-${item.anchor}`}
-            >
+          .filter((item) => !['about', 'tours', 'destinations', 'clients'].includes(item.anchor))
+          .map((item) => (
+            <Section key={item.anchor} id={item.anchor} bg="soft" labelledBy={`h-${item.anchor}`}>
               <SectionHeading id={`h-${item.anchor}`} title={item.label} />
               <Reveal>
                 <p className="text-body text-ink-muted">…</p>

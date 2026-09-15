@@ -207,6 +207,92 @@ export const content: SiteContent = {
       { slug: 'mekong', name: 'Miền Tây', region: 'nam', tourCount: '3 tour', imageAlt: 'Ghe chở nông sản trên sông miền Tây' },
     ],
   },
+  clients: {
+    overline: 'Ai đang đi cùng chúng tôi',
+    heading: 'Những doanh nghiệp đặt tour mỗi năm',
+    description:
+      'Du lịch công ty, tour khen thưởng và đoàn gia đình — phần lớn chuyến đi đến từ khách đã quay lại.',
+    placeholderNote: 'Ô chờ — logo khách hàng thật sẽ đặt vào đây sau khi được đồng ý cho đăng.',
+    items: [
+      { id: 'client-1', name: 'Logo khách hàng 1' },
+      { id: 'client-2', name: 'Logo khách hàng 2' },
+      { id: 'client-3', name: 'Logo khách hàng 3' },
+      { id: 'client-4', name: 'Logo khách hàng 4' },
+      { id: 'client-5', name: 'Logo khách hàng 5' },
+      { id: 'client-6', name: 'Logo khách hàng 6' },
+    ],
+  },
+  testimonials: {
+    overline: 'Khách nói gì',
+    heading: 'Cảm nhận sau chuyến đi',
+    description: 'Phản hồi thu thập sau mỗi đoàn, đăng khi khách đồng ý.',
+    placeholderNote: 'Nội dung mẫu — sẽ thay bằng phản hồi thật của khách.',
+    prevLabel: 'Cảm nhận trước',
+    nextLabel: 'Cảm nhận tiếp theo',
+    ratingLabel: '{n} trên 5 sao',
+    items: [
+      {
+        id: 't1',
+        quote:
+          'Sáng hôm thứ hai trời trở, hướng dẫn viên đổi lộ trình ngay, hoá ra lại thành ngày vui nhất chuyến. Chọn công ty bản địa là vì cái quyết đoán đó.',
+        author: 'Khách hàng A',
+        role: 'Nội dung mẫu — tên và công ty sẽ cập nhật',
+        rating: 5,
+      },
+      {
+        id: 't2',
+        quote:
+          'Đoàn có hai ông bà và một bé bốn tuổi. Mọi thứ được sắp vừa sức: đi bộ ngắn lại, ăn sớm hơn, xe lúc nào cũng cách không quá mười phút.',
+        author: 'Khách hàng B',
+        role: 'Nội dung mẫu — tên và công ty sẽ cập nhật',
+        rating: 5,
+      },
+      {
+        id: 't3',
+        quote:
+          'Hai mươi hai người của công ty, ba ngày, không ai lạc và không ai phàn nàn. Lịch trình gửi trước cả tháng và giữ nguyên đến cuối.',
+        author: 'Khách hàng C',
+        role: 'Nội dung mẫu — tên và công ty sẽ cập nhật',
+        rating: 5,
+      },
+      {
+        id: 't4',
+        quote:
+          'Nhắn Zalo lúc nào cũng trả lời trong vài phút, kể cả tối trước ngày đi khi chuyến bay của chúng tôi bị dời.',
+        author: 'Khách hàng D',
+        role: 'Nội dung mẫu — tên và công ty sẽ cập nhật',
+        rating: 4,
+      },
+      {
+        id: 't5',
+        quote:
+          'Nhớ nhất là mấy chỗ ăn. Không chỗ nào nằm trên phố du lịch, mà hướng dẫn viên gọi tên chủ quán được hết.',
+        author: 'Khách hàng E',
+        role: 'Nội dung mẫu — tên và công ty sẽ cập nhật',
+        rating: 5,
+      },
+    ],
+  },
+  gallery: {
+    overline: 'Từ những chuyến đi',
+    heading: 'Ảnh dọc đường',
+    description: 'Chạm vào ảnh để xem cỡ lớn.',
+    openLabel: 'Xem ảnh cỡ lớn',
+    closeLabel: 'Đóng ảnh',
+    prevLabel: 'Ảnh trước',
+    nextLabel: 'Ảnh tiếp theo',
+    counterLabel: 'Ảnh {i}/{n}',
+    items: [
+      { slug: 'sapa-terraces', alt: 'Ruộng bậc thang lúa chín vàng trên sườn đồi Sa Pa', caption: 'Ruộng bậc thang trên thung lũng Mường Hoa, Sa Pa' },
+      { slug: 'sapa-trek', alt: 'Lối mòn giữa những thửa ruộng bậc thang gần Sa Pa', caption: 'Đi bộ giữa các bản, Lào Cai' },
+      { slug: 'halong-cruise', alt: 'Thuyền gỗ giữa các đảo đá vôi vịnh Hạ Long', caption: 'Ngủ đêm trên vịnh Hạ Long' },
+      { slug: 'phongnha-cave', alt: 'Lòng hang được chiếu sáng ở Phong Nha', caption: 'Trong lòng hang Quảng Bình' },
+      { slug: 'hoi-an-lanterns', alt: 'Con phố treo đèn lồng trong phố cổ Hội An', caption: 'Đêm đèn lồng phố cổ Hội An' },
+      { slug: 'hue-hoian', alt: 'Chùa Cầu Hội An soi bóng xuống kênh', caption: 'Chùa Cầu, Hội An' },
+      { slug: 'mekong-tour', alt: 'Ghe chở đầy nông sản ở chợ nổi Cái Răng', caption: 'Chợ nổi Cái Răng, Cần Thơ' },
+      { slug: 'dalat-tour', alt: 'Luống hoa trong vườn ở Đà Lạt', caption: 'Vườn hoa Đà Lạt' },
+    ],
+  },
   mobileBar: {
     call: 'Gọi ngay',
     zalo: 'Zalo',

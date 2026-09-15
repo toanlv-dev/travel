@@ -1,34 +1,16 @@
 import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useCallback, useSyncExternalStore } from 'react';
 import { content } from '@content';
+import { CarouselNav } from '@/components/common/CarouselNav';
 import { SmartImage } from '@/components/common/SmartImage';
 import { Container } from '@/components/layout/Container';
 import { Section } from '@/components/layout/Section';
 import { SectionHeading } from '@/components/layout/SectionHeading';
 import { images } from '@/data/images';
-import { cn } from '@/lib/cn';
+import { useEmblaNav } from '@/lib/useEmblaNav';
 
 export function Destinations() {
   const [emblaRef, embla] = useEmblaCarousel({ align: 'start', containScroll: 'trimSnaps' });
-
-  // Trạng thái nút nằm bên trong Embla, không phải state của React — đọc bằng
-  // useSyncExternalStore thay vì chép sang useState qua effect
-  const subscribe = useCallback(
-    (onChange: () => void) => {
-      if (!embla) return () => {};
-      embla.on('select', onChange).on('reInit', onChange);
-      return () => {
-        embla.off('select', onChange).off('reInit', onChange);
-      };
-    },
-    [embla],
-  );
-
-  const canPrev = useSyncExternalStore(subscribe, () => embla?.canScrollPrev() ?? false, () => false);
-  const canNext = useSyncExternalStore(subscribe, () => embla?.canScrollNext() ?? false, () => false);
-
-  const arrow = 'flex size-11 items-center justify-center rounded-full border border-line-strong bg-base text-ink disabled:opacity-40';
+  const { canPrev, canNext } = useEmblaNav(embla);
 
   return (
     <Section id="destinations" bg="base" labelledBy="dest-heading" bare>
@@ -41,27 +23,15 @@ export function Destinations() {
             description={content.destinations.description}
             className="mb-6 lg:mb-8"
           />
-          {/* Dưới md đã vuốt được nên ẩn nút đi cho gọn */}
-          <div className="mb-6 hidden shrink-0 gap-2 md:flex lg:mb-8">
-            <button
-              type="button"
-              aria-label={content.destinations.prevLabel}
-              onClick={() => embla?.scrollPrev()}
-              disabled={!canPrev}
-              className={arrow}
-            >
-              <ChevronLeft aria-hidden="true" className="size-5" />
-            </button>
-            <button
-              type="button"
-              aria-label={content.destinations.nextLabel}
-              onClick={() => embla?.scrollNext()}
-              disabled={!canNext}
-              className={arrow}
-            >
-              <ChevronRight aria-hidden="true" className="size-5" />
-            </button>
-          </div>
+          <CarouselNav
+            prevLabel={content.destinations.prevLabel}
+            nextLabel={content.destinations.nextLabel}
+            canPrev={canPrev}
+            canNext={canNext}
+            onPrev={() => embla?.scrollPrev()}
+            onNext={() => embla?.scrollNext()}
+            className="mb-6 lg:mb-8"
+          />
         </div>
       </Container>
 
@@ -81,7 +51,7 @@ export function Destinations() {
                   sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 26vw, (min-width: 640px) 40vw, 62vw"
                 />
                 <figcaption className="p-4">
-                  <p className={cn('text-h4 text-ink')}>{dest.name}</p>
+                  <p className="text-h4 text-ink">{dest.name}</p>
                   <p className="mt-0.5 text-small text-ink-muted">{dest.tourCount}</p>
                 </figcaption>
               </figure>

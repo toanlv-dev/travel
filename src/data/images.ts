@@ -6,18 +6,27 @@ const W_CARD = [480, 960];
 const set = (dir: string, slugs: string[], widths = W): Record<string, ImageRef> =>
   Object.fromEntries(slugs.map((s) => [s, { name: `${dir}/${s}`, widths }]));
 
+const hero = { name: 'hero/sapa-terraces', widths: W };
+const about = { name: 'about/hoi-an-lanterns', widths: W };
+const tours = set(
+  'tours',
+  ['sapa-trek', 'halong-cruise', 'phongnha-cave', 'hue-hoian', 'mekong-tour', 'dalat-tour'],
+  W_CARD,
+);
+
+/** Chưa có ảnh thật từ chuyến đi của khách nên gallery dùng lại đúng những ảnh đã tải,
+ *  không sinh thêm file. Khi có ảnh thật: thêm nhóm assets-src/images/gallery/ rồi trỏ sang. */
+const gallery: Record<string, ImageRef> = { 'sapa-terraces': hero, 'hoi-an-lanterns': about, ...tours };
+
 /** Đường dẫn ảnh (không dịch). Chữ `alt` nằm ở src/content/{en,vi}.ts. */
 export const images = {
-  hero: { name: 'hero/sapa-terraces', widths: W },
-  about: { name: 'about/hoi-an-lanterns', widths: W },
-  tours: set(
-    'tours',
-    ['sapa-trek', 'halong-cruise', 'phongnha-cave', 'hue-hoian', 'mekong-tour', 'dalat-tour'],
-    W_CARD,
-  ),
+  hero,
+  about,
+  tours,
   destinations: set(
     'destinations',
     ['ha-long', 'sapa', 'ninh-binh', 'hue', 'hoi-an', 'da-nang', 'phong-nha', 'da-lat', 'mekong'],
     W_CARD,
   ),
+  gallery,
 };
