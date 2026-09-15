@@ -164,13 +164,13 @@ mẫu"), và câu ghi chú **tự biến mất** khi có dữ liệu thật.
 |---|---------|----------|---------|
 | 1 | ~~Tên công ty, địa chỉ~~ | `company.ts` · `content.contact.address` | ✅ **VIVA VIETNAM TRAVEL**, Ngọc Hà, Hà Nội |
 | 2 | ~~Hotline, email~~ | `company.ts` · `content.contact.hotlineDisplay` | ✅ +84 332 146 395 · vivavietnamtravel@gmail.com |
-| 2b | **Xác nhận số điện thoại có dùng Zalo** | `src/data/company.ts` → `zalo` | đang suy ra `zalo.me/0332146395` |
+| 2b | ~~Xác nhận số điện thoại có dùng Zalo~~ | `src/data/company.ts` → `zalo` | ✅ khách xác nhận 2026-09-15 — `zalo.me/0332146395` |
 | 3 | **Số giấy phép lữ hành** | `src/data/company.ts` → `licenseNo` | `null` → **dòng giấy phép đang ẩn hẳn** ở About và Footer |
 | 4 | **Link trang Facebook** (cho nút Messenger) | `src/data/company.ts` → `messenger` | `null` → **nút Messenger đang ẩn** |
 | 5 | Link Facebook / YouTube cho footer | `src/data/company.ts` → `socials` | chỉ còn Zalo |
 | 6 | Domain thật | `src/data/company.ts` → `siteUrl` | `https://example.com` |
 | 7 | Logo công ty | `public/` + Header/Footer | đang in tên bằng chữ |
-| 8 | **Logo khách hàng** (kèm cho phép đăng) | `public/images/clients/` + `src/data/clients.ts` | 6 ô viền đứt "Logo khách hàng 1…6" |
+| 8 | **Logo khách hàng** (kèm cho phép đăng) | `public/images/clients/` + `src/data/clients.ts` | mục đổi sang **6 nhóm khách đoàn**; dải logo ẩn cho tới khi `clientLogos` có dòng đầu tiên |
 | 9 | **Cảm nhận thật của khách** (tên, chức danh, cho phép đăng) | `src/content/{en,vi}.ts` → `testimonials` | 5 cảm nhận mẫu, tên "Khách hàng A…E" |
 | 10 | **Ảnh thật từ các chuyến đi** | `assets-src/images/gallery/` + `src/data/images.ts` | dùng tạm ảnh phong cảnh đã tải |
 | 11 | Bài viết của công ty | `src/content/{en,vi}.ts` → `posts` | 3 bài cẩm nang mẫu |
@@ -178,7 +178,9 @@ mẫu"), và câu ghi chú **tự biến mất** khi có dữ liệu thật.
 | 13 | Ảnh OG (1200×630) cho khi chia sẻ link | `public/` + `index.html` | chưa có |
 
 > ⚠️ Mục **8, 9, 10, 12** là phần tạo niềm tin — cũng là phần **tuyệt đối không được bịa**. Không đặt
-> tên doanh nghiệp có thật khi chưa xin phép, không gán lời chứng thực cho người có thật.
+> tên doanh nghiệp có thật khi chưa xin phép, không gán lời chứng thực cho người có thật. Logo lấy
+> trên mạng dán vào mục 8 là **tuyên bố quan hệ làm ăn không có thật**, đồng thời dùng nhãn hiệu của
+> họ không phép — nên mục đó nay nói về *loại đoàn nhận tổ chức*, không mượn tên ai.
 >
 > Ba thứ chưa có thì **ẩn hẳn** thay vì để giá trị bịa: số giấy phép (mục 3), nút Messenger (mục 4)
 > và nút Facebook/YouTube (mục 5). Riêng **số liệu ở mục 12 vẫn đang hiện như thật** — nhớ thay

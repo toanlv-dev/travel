@@ -502,30 +502,41 @@ const c10 = await browser.newContext({ viewport: { width: 1280, height: 900 } })
 const p10 = await c10.newPage();
 await p10.goto(BASE + '/', { waitUntil: 'networkidle' });
 await p10.locator('#clients').scrollIntoViewIfNeeded();
-await p10.waitForTimeout(400);
+// 6 thẻ hiện lệch nhau 60ms một; đo sớm thì transform còn dở, hàng sẽ so le
+await p10.waitForTimeout(1200);
 
-const logos = await p10.evaluate(() => {
+const segs = await p10.evaluate(() => {
   const els = [...document.querySelectorAll('#clients ul > li')];
-  const tops = new Set(els.map((e) => Math.round(e.getBoundingClientRect().top)));
-  // Logo thật cao thấp khác nhau; cái phải thẳng hàng là cái HỘP chứa nó
-  const boxes = new Set(els.map((e) => Math.round(e.firstElementChild.getBoundingClientRect().height)));
-  return { n: els.length, rows: tops.size, boxes: [...boxes] };
-});
-check(logos.n === 6, `6 ô logo khách hàng (${logos.n})`);
-check(logos.rows === 1, `1280px: 6 ô trên 1 hàng (đang ${logos.rows} hàng)`);
-check(logos.boxes.length === 1, `hộp logo cùng chiều cao (${logos.boxes.join(', ')}px)`);
-
-// Chưa có logo thật → ô phải NHÌN RÕ là chỗ chờ, kèm câu giải thích
-const ph = await p10.evaluate(() => {
-  const boxes = [...document.querySelectorAll('#clients [data-placeholder="client-logo"]')];
+  const rows = {};
+  for (const e of els) {
+    const r = e.getBoundingClientRect();
+    (rows[Math.round(r.top)] ||= []).push(Math.round(r.height));
+  }
   return {
-    n: boxes.length,
-    dashed: boxes.every((b) => getComputedStyle(b).borderStyle === 'dashed'),
-    text: document.querySelector('#clients').innerText,
+    n: els.length,
+    rows: Object.values(rows).map((hs) => ({ cols: hs.length, heights: [...new Set(hs)] })),
+    // icon không được co lại khi chữ dài
+    icons: [...new Set([...document.querySelectorAll('#clients ul > li > span')].map((s) => Math.round(s.getBoundingClientRect().width)))],
   };
 });
-check(ph.n === 6 && ph.dashed, `ô logo là placeholder viền đứt (${ph.n} ô, dashed=${ph.dashed})`);
-check(/placeholder/i.test(ph.text), 'có câu ghi rõ đang chờ logo thật');
+check(segs.n === 6, `6 nhóm khách doanh nghiệp (${segs.n})`);
+check(
+  segs.rows.length === 2 && segs.rows.every((r) => r.cols === 3),
+  `1280px: lưới 3 cột × 2 hàng (${segs.rows.map((r) => r.cols).join('+')})`,
+);
+check(
+  segs.rows.every((r) => r.heights.length === 1),
+  `thẻ cùng hàng cao bằng nhau (${segs.rows.map((r) => r.heights.join('/')).join(' · ')}px)`,
+);
+check(segs.icons.length === 1 && segs.icons[0] === 40, `ô icon giữ nguyên 40px (${segs.icons.join(', ')})`);
+
+// Chưa có logo thật → dải logo phải ẩn hẳn, và còn câu ghi rõ là nội dung mẫu
+const ph = await p10.evaluate(() => ({
+  imgs: document.querySelectorAll('#clients img').length,
+  text: document.querySelector('#clients').innerText,
+}));
+check(ph.imgs === 0, `chưa có logo thật → không render ảnh logo (${ph.imgs})`);
+check(/sample copy/i.test(ph.text), 'có câu ghi rõ đây là nội dung mẫu');
 
 await p10.setViewportSize({ width: 375, height: 667 });
 await p10.waitForTimeout(250);
@@ -534,7 +545,7 @@ const cols375 = await p10.evaluate(() => {
   const top = Math.round(els[0].getBoundingClientRect().top);
   return els.filter((e) => Math.round(e.getBoundingClientRect().top) === top).length;
 });
-check(cols375 === 2, `375px: lưới logo 2 cột (đang ${cols375})`);
+check(cols375 === 1, `375px: nhóm khách xếp 1 cột (đang ${cols375})`);
 await p10.setViewportSize({ width: 1280, height: 900 });
 await p10.waitForTimeout(250);
 

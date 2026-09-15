@@ -84,12 +84,15 @@ export interface Destination {
   imageAlt: string;
 }
 
-/** Ô logo khách hàng. Chưa có logo thật nên chỉ có chữ — xem src/data/clients.ts. */
-export interface ClientSlot {
-  /** Khớp với id trong src/data/clients.ts */
+export type ClientIcon = 'tech' | 'finance' | 'factory' | 'school' | 'mice' | 'group';
+
+/** Một nhóm khách đoàn công ty. Nói về loại đoàn nhận tổ chức, KHÔNG nêu tên doanh nghiệp nào. */
+export interface ClientSegment {
   id: string;
-  /** Tên hiển thị trong ô placeholder. KHÔNG được thay bằng tên doanh nghiệp có thật khi chưa xin phép. */
+  icon: ClientIcon;
   name: string;
+  /** Một câu: làm gì cho nhóm này, quy mô đoàn thường gặp */
+  description: string;
 }
 
 export interface Testimonial {
@@ -186,9 +189,11 @@ export interface SiteContent {
     overline: string;
     heading: string;
     description: string;
-    /** Câu ghi rõ đây là ô chờ logo thật — hiển thị cho tới khi khách gửi logo */
+    segments: ClientSegment[];
+    /** Tiêu đề dải logo — chỉ hiện khi src/data/clients.ts đã có logo thật */
+    logosHeading: string;
+    /** Câu ghi rõ đây là nội dung mẫu, chờ khách xác nhận */
     placeholderNote: string;
-    items: ClientSlot[];
   };
   testimonials: {
     overline: string;

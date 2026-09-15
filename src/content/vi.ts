@@ -13,7 +13,7 @@ export const content: SiteContent = {
     { anchor: 'about', label: 'Về chúng tôi' },
     { anchor: 'tours', label: 'Tour du lịch' },
     { anchor: 'destinations', label: 'Điểm đến' },
-    { anchor: 'clients', label: 'Khách hàng' },
+    { anchor: 'clients', label: 'Khách đoàn' },
     { anchor: 'contact', label: 'Liên hệ' },
   ],
   langSwitch: {
@@ -208,18 +208,49 @@ export const content: SiteContent = {
     ],
   },
   clients: {
-    overline: 'Ai đang đi cùng chúng tôi',
-    heading: 'Những doanh nghiệp đặt tour mỗi năm',
+    overline: 'Khách hàng doanh nghiệp',
+    heading: 'Những đoàn công ty chúng tôi nhận tổ chức',
     description:
-      'Du lịch công ty, tour khen thưởng và đoàn gia đình — phần lớn chuyến đi đến từ khách đã quay lại.',
-    placeholderNote: 'Ô chờ — logo khách hàng thật sẽ đặt vào đây sau khi được đồng ý cho đăng.',
-    items: [
-      { id: 'client-1', name: 'Logo khách hàng 1' },
-      { id: 'client-2', name: 'Logo khách hàng 2' },
-      { id: 'client-3', name: 'Logo khách hàng 3' },
-      { id: 'client-4', name: 'Logo khách hàng 4' },
-      { id: 'client-5', name: 'Logo khách hàng 5' },
-      { id: 'client-6', name: 'Logo khách hàng 6' },
+      'Từ đoàn 20 người đến đoàn hơn 300 người chia nhiều đợt. Cho biết số khách, ngân sách và ngày đi, chúng tôi dựng lịch trình riêng và báo giá trọn gói.',
+    logosHeading: 'Một số đơn vị đã đồng hành',
+    placeholderNote: 'Nội dung mẫu — sẽ chỉnh lại theo nhóm khách thật của công ty.',
+    segments: [
+      {
+        id: 'tech',
+        icon: 'tech',
+        name: 'Doanh nghiệp công nghệ',
+        description: 'Offsite và team building 2–3 ngày, đoàn 30–150 người, thường đi cuối tuần.',
+      },
+      {
+        id: 'finance',
+        icon: 'finance',
+        name: 'Ngân hàng & bảo hiểm',
+        description: 'Tour khen thưởng cuối năm, gom nhiều chi nhánh về chung một điểm hẹn.',
+      },
+      {
+        id: 'factory',
+        icon: 'factory',
+        name: 'Nhà máy & khu công nghiệp',
+        description: 'Nghỉ mát cho công nhân, chia nhiều đợt, xe đón ngay tại cổng nhà máy.',
+      },
+      {
+        id: 'school',
+        icon: 'school',
+        name: 'Trường học & đại học',
+        description: 'Dã ngoại và học kỳ trải nghiệm, có giáo viên đi kèm và bảo hiểm riêng cho học sinh.',
+      },
+      {
+        id: 'mice',
+        icon: 'mice',
+        name: 'Hội nghị & sự kiện',
+        description: 'Hội nghị kết hợp tham quan: phòng họp, âm thanh, tiệc gala và tour nửa ngày.',
+      },
+      {
+        id: 'group',
+        icon: 'group',
+        name: 'Hội nhóm & gia đình',
+        description: 'Họp lớp, hội đồng hương, gia đình nhiều thế hệ — đoàn riêng, đi theo lịch của bạn.',
+      },
     ],
   },
   testimonials: {

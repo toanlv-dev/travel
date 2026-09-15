@@ -1,10 +1,10 @@
-/** Logo khách hàng theo id trong content.clients.items; `null` = chưa có logo thật.
- *  Có logo rồi: đặt file vào public/images/clients/ rồi điền tên file vào đây. */
-export const clientLogos: Record<string, string | null> = {
-  'client-1': null,
-  'client-2': null,
-  'client-3': null,
-  'client-4': null,
-  'client-5': null,
-  'client-6': null,
-};
+/** Logo khách hàng doanh nghiệp. CHỈ thêm khi đơn vị đó đã đồng ý cho đăng —
+ *  đặt file vào public/images/clients/ rồi thêm một dòng ở đây. Mảng rỗng thì dải logo tự ẩn. */
+export interface ClientLogo {
+  /** Tên file trong public/images/clients/ */
+  file: string;
+  /** Tên đơn vị — dùng làm alt */
+  name: string;
+}
+
+export const clientLogos: ClientLogo[] = [];

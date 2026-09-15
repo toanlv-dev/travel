@@ -13,7 +13,7 @@ export const content: SiteContent = {
     { anchor: 'about', label: 'About us' },
     { anchor: 'tours', label: 'Tours' },
     { anchor: 'destinations', label: 'Destinations' },
-    { anchor: 'clients', label: 'Our clients' },
+    { anchor: 'clients', label: 'Groups' },
     { anchor: 'contact', label: 'Contact' },
   ],
   langSwitch: {
@@ -208,19 +208,49 @@ export const content: SiteContent = {
     ],
   },
   clients: {
-    overline: 'Who travels with us',
-    heading: 'Companies that book with us every year',
+    overline: 'Group travel',
+    heading: 'The kinds of groups we run',
     description:
-      'Corporate retreats, incentive trips and family groups — most of our departures come from people who came back.',
-    placeholderNote:
-      'Placeholder — real client logos go here once we receive permission to display them.',
-    items: [
-      { id: 'client-1', name: 'Client logo 1' },
-      { id: 'client-2', name: 'Client logo 2' },
-      { id: 'client-3', name: 'Client logo 3' },
-      { id: 'client-4', name: 'Client logo 4' },
-      { id: 'client-5', name: 'Client logo 5' },
-      { id: 'client-6', name: 'Client logo 6' },
+      'From twenty people to three hundred split across several departures. Tell us the headcount, the budget and the dates, and we build the itinerary and quote the whole thing.',
+    logosHeading: 'Some of the organisations we work with',
+    placeholderNote: "Sample copy — to be adjusted to the company's real client mix.",
+    segments: [
+      {
+        id: 'tech',
+        icon: 'tech',
+        name: 'Technology companies',
+        description: 'Two- and three-day offsites and team building for 30–150 people, usually over a weekend.',
+      },
+      {
+        id: 'finance',
+        icon: 'finance',
+        name: 'Banks and insurers',
+        description: 'Year-end incentive trips that bring branches together in one place.',
+      },
+      {
+        id: 'factory',
+        icon: 'factory',
+        name: 'Factories and industrial parks',
+        description: 'Staff holidays run in waves, with coaches picking up at the factory gate.',
+      },
+      {
+        id: 'school',
+        icon: 'school',
+        name: 'Schools and universities',
+        description: 'Field trips and study tours, with teachers alongside and separate student insurance.',
+      },
+      {
+        id: 'mice',
+        icon: 'mice',
+        name: 'Conferences and events',
+        description: 'Meetings plus sightseeing: rooms, AV, a gala dinner and a half-day tour.',
+      },
+      {
+        id: 'group',
+        icon: 'group',
+        name: 'Clubs and family groups',
+        description: 'Reunions, hometown associations, multi-generation families — private departures on your dates.',
+      },
     ],
   },
   testimonials: {
