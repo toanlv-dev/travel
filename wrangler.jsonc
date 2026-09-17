@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "travel",
+  "compatibility_date": "2026-09-17",
+  // Không có "main": Worker chỉ phục vụ file tĩnh trong dist/, không chạy code.
+  "assets": {
+    "directory": "./dist"
+  }
+}
